@@ -42,4 +42,40 @@ class EventProvider extends \Faker\Provider\Base {
         return static::randomElement(self::$eventName);
     }
 
+    protected static $eventDescription = [
+      'Une heure de spectacle, tout public. Bar ouvert dès 18h.',
+      'Entrée libre pour les moins de 12 ans. Places limitées.',
+      'Décors simples, jeu vif. Échanges avec l’équipe après la représentation.',
+      'Visite libre. L’artiste est présent le week-end.',
+      'Trois sets de 20 minutes. Programmation locale.',
+      'Atelier le samedi après-midi, sur inscription à l’entrée.',
+      'Ambiance café-théâtre. On peut proposer des thèmes.',
+      'Piste dégagée pour danser. Bouchons d’oreilles à disposition.',
+    ];
+
+    /**
+     * Short French demo copy for an event.
+     */
+    public static function eventDescription(){
+        return static::randomElement(self::$eventDescription);
+    }
+
+    protected static $commentContent = [
+      'Très belle soirée, on revient.',
+      'Bonne salle, un peu sonore près de la scène.',
+      'Accessible même si on n’y connaît rien.',
+      'Accueil sympa, on voit bien depuis le fond.',
+      'Un peu long entre les sets, sinon nickel.',
+      'Programmation régulière, on y va souvent.',
+      'Prenez des bouchons, ça envoie.',
+      'À voir. Les photos sont justes.',
+    ];
+
+    /**
+     * Short French demo comment.
+     */
+    public static function commentContent(){
+        return static::randomElement(self::$commentContent);
+    }
+
 }

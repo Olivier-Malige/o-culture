@@ -102,7 +102,7 @@ class AppFixtures extends Fixture {
             'username' => function() use($generator) { return $generator->unique()->artistName();},
             'email' => function() use($generator) { return $generator->unique()->userName().'@example.com';},
             'password' => function() use($demoHash) { return $demoHash;},
-            'description' => function() use($generator) { return $generator->sentence($nbWords = 50, $variableNbWords = true);},
+            'description' => function() use($generator) { return $generator->artistDescription();},
             'city' => function() use($generator) { return $generator->randomElement($array = array ('Paris','Lyon','Toulouse', 'Marseille', 'Bayonne', 'Strasbourg'));},
             'website' => function() use($generator) { return 'example.com';},
             'zipcode' => 75000,
@@ -130,13 +130,13 @@ class AppFixtures extends Fixture {
         $populator->addEntity('App\Entity\Event', 30, array(
             'name' => function() use($generator) { return $generator->unique()->eventName();},
             'nbSpectator' => function() use($generator) { return $generator->numberBetween($min = 30, $max = 500);},
-            'description' => function() use($generator) { return $generator->sentence($nbWords = 50, $variableNbWords = true);},
+            'description' => function() use($generator) { return $generator->eventDescription();},
             'price' => function() use($generator) { return $generator->numberBetween($min = 0, $max = 40);},
             'plannedDate' => function() use($generator) { return $generator->dateTimeThisYear($max = 'now', $timezone = null);},
         ));
         
         $populator->addEntity('App\Entity\Comment', 30, array(
-            'content' => function() use($generator) { return $generator->sentence($nbWords = 15, $variableNbWords = true);},
+            'content' => function() use($generator) { return $generator->commentContent();},
             'nbLikes' => function() use($generator) { return $generator->numberBetween($min = 0, $max = 8);},
         ));
 
