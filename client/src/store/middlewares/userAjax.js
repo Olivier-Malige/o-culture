@@ -98,7 +98,6 @@ const ajax = store => next => (action) => {
       break;
     }
     case UPDATE_PROFILE:
-      // console.log('Update profile :', action.values);
       axios({
         method: 'put',
         url: `${serverUrl}/api/appusers/${action.values.username}`,
@@ -125,7 +124,6 @@ const ajax = store => next => (action) => {
         });
       break;
     case CREATE_PLACE:
-      // console.log('Create place :', action.values);
       axios({
         method: 'post',
         url: `${serverUrl}/api/places/create`,
@@ -139,7 +137,6 @@ const ajax = store => next => (action) => {
         });
       break;
     case DELETE_PLACE:
-      // console.log('delte', action);
       axios({
         method: 'delete',
         url: `${serverUrl}/api/places/${action.id}/delete`,
@@ -152,7 +149,6 @@ const ajax = store => next => (action) => {
         });
       break;
     case UPDATE_EVENT:
-      // console.log('update event :', action.values);
       axios({
         method: 'put',
         url: `${serverUrl}/api/events/${action.values.id}/update`,
@@ -166,7 +162,6 @@ const ajax = store => next => (action) => {
         });
       break;
     case CREATE_EVENT:
-      // console.log('Create event :', action.values);
       axios({
         method: 'post',
         url: `${serverUrl}/api/events/create`,
@@ -180,7 +175,6 @@ const ajax = store => next => (action) => {
         });
       break;
     case DELETE_EVENT:
-      // console.log('delte', action);
       axios({
         method: 'delete',
         url: `${serverUrl}/api/events/${action.id}/delete`,
@@ -193,7 +187,6 @@ const ajax = store => next => (action) => {
         });
       break;
     case ADD_COMMENT_EVENT:
-      // console.log('Add comment event :', action.value);
       axios({
         method: 'post',
         url: `${serverUrl}/api/events/${action.id}/comments`,

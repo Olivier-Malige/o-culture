@@ -40,7 +40,6 @@ const initialState = {
       },
     ],
   },
-  artists: '',
   places: '',
   currentPlace: {
     id: '',
@@ -98,17 +97,11 @@ const SET_EVENTS = 'SET_EVENTS';
 const SET_EVENT = 'SET_EVENT';
 const SET_PLACES = 'SET_PLACES';
 const SET_PLACE = 'SET_PLACE';
-const SET_ARTISTS = 'SET_ARTISTS';
-const SET_ARTIST = 'SET_ARTIST';
-const SET_ARTIST_EVENTS = 'SET_ARTIST_EVENTS';
 const SET_EVENTS_RESULTS = 'SET_EVENTS_RESULTS';
 const SET_ARTISTS_RESULTS = 'SET_ARTISTS_RESULTS';
 const SET_PLACES_RESULTS = 'SET_PLACES_RESULTS';
 const SET_PLACE_TYPE = 'SET_PLACE_TYPE';
 const SET_EVENT_TYPE = 'SET_EVENT_TYPE';
-const SET_ZIPCODE = 'SET_ZIPCODE';
-const SET_MONTHLY_EVENTS = 'SET_MONTHLY_EVENTS';
-const SET_EVENTS_BY_TYPE = 'SET_EVENTS_BY_TYPE';
 
 /**
  * Traitements
@@ -138,21 +131,6 @@ const reducer = (state = initialState, action = {}) => {
       return {
         ...state,
         currentPlace: action.value,
-      };
-    case SET_ARTISTS:
-      return {
-        ...state,
-        artists: action.value,
-      };
-    case SET_ARTIST:
-      return {
-        ...state,
-        artist: action.value,
-      };
-    case SET_ARTIST_EVENTS:
-      return {
-        ...state,
-        recommendation: { ...state.recommendation, artist_events: action.value },
       };
     case SET_PLACE_TYPE:
       return {
@@ -184,24 +162,6 @@ const reducer = (state = initialState, action = {}) => {
       return {
         ...state,
         search: { ...state.search, results: { ...state.search.results, places: action.value } },
-      };
-    case SET_ZIPCODE:
-      return {
-        ...state,
-        recommendation: { ...state.recommendation, zipcode: action.value },
-      };
-    case SET_MONTHLY_EVENTS:
-      return {
-        ...state,
-        recommendation: { ...state.recommendation, monthly_events: action.value },
-      };
-    case SET_EVENTS_BY_TYPE:
-      return {
-        ...state,
-        recommendation: {
-          ...state.recommendation,
-          [action.value]: action.data,
-        },
       };
     default:
       return state;
@@ -238,18 +198,6 @@ export const eventTypeReceived = value => ({
   type: SET_EVENT_TYPE,
   value,
 });
-export const artistsReceived = value => ({
-  type: SET_ARTISTS,
-  value,
-});
-export const artistReceived = value => ({
-  type: SET_ARTIST,
-  value,
-});
-export const artistEventsReceived = value => ({
-  type: SET_ARTIST_EVENTS,
-  value,
-});
 export const resultsEventsReceived = value => ({
   type: SET_EVENTS_RESULTS,
   value,
@@ -261,19 +209,6 @@ export const resultsArtistsReceived = value => ({
 export const resultsPlacesReceived = value => ({
   type: SET_PLACES_RESULTS,
   value,
-});
-export const zipcodeReceived = value => ({
-  type: SET_ZIPCODE,
-  value,
-});
-export const monthlyEventsReceived = value => ({
-  type: SET_MONTHLY_EVENTS,
-  value,
-});
-export const eventsByType = (value, data) => ({
-  type: SET_EVENTS_BY_TYPE,
-  value,
-  data,
 });
 
 /**

@@ -6,13 +6,7 @@ const initialState = {
   loginShow: false,
   loginError: '',
   signupAcount: 'spectator',
-  signupUserExist: false,
-  signupMailExsit: false,
   page: 1,
-  location: {
-    latitude: '',
-    longitude: '',
-  },
 };
 /**
  * Types
@@ -27,7 +21,6 @@ const SET_LOGIN_ERROR = 'SET_LOGIN_ERROR';
 const SET_SIGNUP = 'SET_SIGNUP';
 const SIGN_UP_NEXT_PAGE = 'SIGN_UP_NEXT_PAGE';
 const SIGN_UP_PREV_PAGE = 'SIGN_UP_PREV_PAGE';
-const SET_LOCATION = 'SET_LOCATION';
 
 /**
  * Traitements
@@ -100,15 +93,6 @@ const reducer = (state = initialState, action = {}) => {
         ...state,
         page: state.page - 1,
       };
-    case SET_LOCATION:
-      return {
-        ...state,
-        location: {
-          ...state.location,
-          latitude: action.latitude,
-          longitude: action.longitude,
-        },
-      };
 
     default:
       return state;
@@ -150,11 +134,6 @@ export const nextPage = () => ({
 });
 export const prevPage = () => ({
   type: SIGN_UP_PREV_PAGE,
-});
-export const getUserLocation = (latitude, longitude) => ({
-  type: SET_LOCATION,
-  latitude,
-  longitude,
 });
 
 /**

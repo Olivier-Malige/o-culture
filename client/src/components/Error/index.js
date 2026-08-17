@@ -4,14 +4,6 @@
 import React from 'react';
 
 /**
- * Local import
- */
-// Components
-
-// Styles and assets
-import './profile.sass';
-
-/**
  * Code
  */
 const Error = () => (

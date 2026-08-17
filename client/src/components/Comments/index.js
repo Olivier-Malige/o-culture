@@ -30,7 +30,6 @@ class Comments extends React.Component {
 
   render() {
     const { comments, userLogged, setLogin } = this.props;
-    // console.log(this.state);
     return (
       <React.Fragment>
         <div className="comment">

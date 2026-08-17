@@ -76,5 +76,3 @@ const rootComponent = (
 );
 
 render(rootComponent, document.getElementById('root'));
-
-// store.dispatch(getEventsList());
