@@ -1,15 +1,20 @@
 #place
     display: grid
-    grid-template-columns: 70% 30%
-    grid-column-gap: 20px
+    grid-template-columns: 1fr
+    grid-row-gap: 24px
     width: 90vw
     margin: 0 auto
+    padding: 1.5rem 0 2.5rem
+    @media only screen and (min-width: 900px)
+        grid-template-columns: 70% 30%
+        grid-column-gap: 20px
+        grid-row-gap: 0
 
     .place
         &-events
             section
                 width: 100%
-                margin: 20px 0
+                margin: 16px 0
 
         &-comments
 
@@ -18,23 +23,28 @@
             word-wrap: break-word 
             font-size: 24px 
             line-height: 30px 
-            margin: 20px 0
+            margin: 16px 0
 
     .place-resume
-        height: 400px
-        // background-color: yellow
-        position: sticky
-        top: 70px
+        height: auto
+        position: static
+        @media only screen and (min-width: 900px)
+            position: sticky
+            top: 70px
 
         h1
             text-align: center
             font-weight: 800 
             font-size: 24px 
             line-height: 30px 
-            margin-bottom: 20px
+            margin-bottom: 16px
 
         ul
-            margin-top: 20px
-            
+            margin-top: 16px
+            margin-bottom: 16px
 
-        
+        .place-map
+            height: 240px
+            min-height: 240px
+            box-shadow: 0 0 15px black
+ 

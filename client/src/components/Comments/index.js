@@ -49,7 +49,7 @@ class Comments extends React.Component {
                 <div>
                   <textarea ref={this.textInput} />
                 </div>
-                <button type="submit">
+                <button type="submit" className="comment-submit">
                   Envoyer
                 </button>
               </div>

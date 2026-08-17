@@ -221,7 +221,7 @@ class Profile extends React.Component {
               <div className="more animated pulse infinite">
                 <FontAwesomeIcon
                   className="pluscircle"
-                  size="6x"
+                  size="3x"
                   icon="plus-circle"
                   onClick={showCreatePlace}
                 />
@@ -275,7 +275,7 @@ class Profile extends React.Component {
                   <div className="more animated pulse infinite">
                     <FontAwesomeIcon
                       className="pluscircle"
-                      size="6x"
+                      size="3x"
                       icon="plus-circle"
                       onClick={showCreateEvent}
                     />

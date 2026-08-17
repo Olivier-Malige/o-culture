@@ -27,7 +27,9 @@ $size-banner: 50px
     height: $size-banner
     z-index: 10
     &-icon
-        margin-left: 1rem
+        margin-left: 0
+        display: flex
+        align-items: center
     &-icon:hover
         cursor: pointer
         transform: scale(1.2)
@@ -35,19 +37,21 @@ $size-banner: 50px
         display: flex
         flex-wrap: nowrap
         align-items: center
-        // width: 100vw
+        width: 100%
+        padding: 0 1.25rem
+        gap: 0.75rem
 
         @media only screen and (min-width: 737px)
             margin: 0 auto
-                // width: 100%
             max-width: 1158px
 
     &-logo
         @include to-the-left
-        justify-content: flex-end
-        padding-right: 1rem
+        align-items: center
+        padding-right: 0.25rem
+        line-height: 1
         font-family: 'Righteous', cursive
-        font-size: 3rem
+        font-size: 2.2rem
         text-shadow: 1px 1px 20px $primary
         &:hover
             transform: scale(1.1)
@@ -58,68 +62,78 @@ $size-banner: 50px
 
     &-bar
         box-sizing: border-box
+        position: relative
+        flex: 1
+        min-width: 0
 
         &:focus-within
             ~ .curtain, > .search-bar--results
                 display: block
                 opacity: 1
-                transition: all 350ms ease
+                transition: all 300ms ease
 
         &--form
+            position: relative
+            display: flex
+            align-items: center
+            width: 100%
+
             &--icon
                 @mixin icon
-                    height: $size-banner
-                    width: 40px
                     position: absolute
-                    top: 0
+                    left: 12px
+                    top: 50%
+                    width: 16px
+                    height: 16px
+                    transform: translateY(-50%)
                     background-repeat: no-repeat
-                    background-position: 10px 50%
+                    background-position: center
+                    background-size: contain
+                    pointer-events: none
+                    z-index: 1
 
                 &_search
                     @include icon
-                    top: 0
+                    left: 14px
+                    width: 20px
+                    height: 20px
+                    // SVG viewBox is 16x44; size so the glyph reads ~18–20px
+                    background-size: 20px 55px
                     background-image: url(/src/assets/image_search.svg)
 
                 &_close
                     @include icon
-                    right: .5em
-                    top: -$size-banner
+                    left: auto
+                    right: 12px
                     background-image: url(/src/assets/image_close.svg)
 
             &--input
                 font-family: 'Montserrat', sans-serif
                 color: $white
-                font-size: 1.1em
-                width: calc(100vw - (44px + 6em))
-                // min-width: 100%
-                height: 26px
-                padding-left: 2em
-                padding-right: 2em
-                // box-sizing: border-box
+                font-size: 0.95rem
+                line-height: 1.3
+                width: 100%
+                height: 34px
+                padding: 0 12px 0 42px
                 border-radius: 4px
-                border: 1px black solid
-                background-color: $noir75
-                transition: all 350ms ease
+                border: 1px solid #2a2a2a
+                background-color: #4a4a4a
+                transition: background-color 200ms ease, border-color 200ms ease
 
-                @media only screen and (min-width: 737px)
-                    width: 50vw
-                    max-width: 900px
+                &::placeholder
+                    color: #cfcfcf
+                    line-height: 1.3
 
                 &:focus
-                    width: calc(100vw - (44px + 4em))
-                    height: $size-banner - 2px
                     outline: none
-                    border-radius: unset
-                    border: none
-                    border-left: 1px black solid
-                    border-right: 1px black solid
-
-                    @media only screen and (min-width: 737px)
-                        width: 50vw
-                        max-width: 900px
+                    background-color: #5a5a5a
+                    border-color: $primary
+                    height: 34px
 
         &--results
             height: auto
+            max-height: 70vh
+            overflow-y: auto
             width: 100%
             max-width: 900px
             background-color: $noir10
@@ -145,6 +159,10 @@ $size-banner: 50px
                 color: $noir80
                 margin-bottom: 0.25em
 
+            &_empty
+                color: $noir80
+                padding: 0.25em 0
+
             ul
                 margin-bottom: 1em
                 margin-left: 1em
@@ -153,11 +171,16 @@ $size-banner: 50px
                     color: $black
                     margin: 0.3em
 
+                    a
+                        color: $primary
+                        &:hover
+                            color: $secondary
+
 
     &-settings
         @include to-the-left
         justify-content: flex-start
-        padding-left: 1em
+        padding-left: 0
         display: none
 
         @media only screen and (min-width: 737px)
