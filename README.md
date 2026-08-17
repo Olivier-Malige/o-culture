@@ -20,9 +20,14 @@ cp .env.example .env
 docker compose up --build
 ```
 
-Ouvrir [http://localhost:8080](http://localhost:8080).
+- Front live (hot reload) : [http://localhost:3000](http://localhost:3000)
+- Stack « buildée » + admin : [http://localhost:8080](http://localhost:8080)
+  (Caddy sert le build figé : pas de hot reload sur ce port)
 
-Le front et l’API passent par Caddy (même origine). MariaDB n’est pas publiée
+Modifier `client/src` suffit : pas besoin de rebuild Docker. Rebuild `front`
+uniquement si `client/package.json` / `yarn.lock` changent.
+
+L’API passe par le proxy Webpack (même origine). MariaDB n’est pas publiée
 sur l’hôte.
 
 ## Comptes de démo
@@ -70,9 +75,13 @@ premier démarrage (volume Docker, hors git).
 - `api` : Apache + PHP 8.3 (Symfony 6.4)
 - `db` : MariaDB 10.11 + seed anonymisé
 
-## Développement hors Docker
+## Front sans Docker
 
-Possible mais déconseillé. Les fichiers `server/.env.dist` et
-`client/package.json` documentent l’ancienne procédure (`composer install`,
-`yarn start`). L’URL d’API se configure avec `API_URL` au build Webpack
-(vide = same-origin).
+Si Node 20 et Yarn sont installés sur l’hôte, avec l’API déjà lancée :
+
+```bash
+cd client && yarn start
+```
+
+Webpack écoute sur [http://localhost:3000](http://localhost:3000) et proxy
+`/api` vers [http://localhost:8080](http://localhost:8080).

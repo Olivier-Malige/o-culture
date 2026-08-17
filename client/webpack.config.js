@@ -10,8 +10,19 @@ const HtmlWebPackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 // Config pour le devServer
-const host = 'localhost';
-const port = 8080;
+const host = process.env.DEV_HOST || 'localhost';
+const port = Number(process.env.DEV_PORT || 3000);
+const publicAddr = process.env.DEV_PUBLIC || `localhost:${port}`;
+const [sockHost, sockPortFromPublic] = publicAddr.split(':');
+const pollEnv = process.env.DEV_POLL;
+const pollMs = !pollEnv || pollEnv === '0'
+  ? 0
+  : (Number(pollEnv) === 1 ? 300 : Number(pollEnv));
+const apiProxy = process.env.API_PROXY || 'http://localhost:8080';
+const proxy = {};
+['/api', '/admin', '/chat', '/css', '/bundles'].forEach((proxyPath) => {
+  proxy[proxyPath] = { target: apiProxy, changeOrigin: true };
+});
 
 const devMode = process.env.NODE_ENV !== 'production';
 
@@ -118,12 +129,24 @@ module.exports = {
   devServer: {
     overlay: true, // Overlay navigateur si erreurs de build
     stats: 'minimal', // Infos en console limitées
-    progress: true, // progression du build en console
+    progress: Boolean(process.stdout.isTTY), // progression du build en console
     inline: true, // Rechargement du navigateur en cas de changement
-    open: true, // on ouvre le navigateur
+    hot: true,
+    liveReload: true,
+    open: process.env.DEV_OPEN !== '0', // on ouvre le navigateur
     historyApiFallback: true,
+    disableHostCheck: true,
     host: host,
     port: port,
+    public: publicAddr,
+    sockHost,
+    sockPort: Number(sockPortFromPublic || port),
+    proxy,
+    watchOptions: {
+      ignored: /node_modules/,
+      aggregateTimeout: 300,
+      ...(pollMs > 0 ? { poll: pollMs } : {}),
+    },
   },
   plugins: [
     new webpack.DefinePlugin({
