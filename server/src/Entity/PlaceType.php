@@ -42,7 +42,7 @@ class PlaceType
 
     public function __construct()
     {
-        $this->places = new ArrayCollection();
+        $this->Places = new ArrayCollection();
         $this->createdAt = new \DateTime();
     }
 
@@ -94,13 +94,13 @@ class PlaceType
      */
     public function getPlaces(): Collection
     {
-        return $this->places;
+        return $this->Places;
     }
 
     public function addPlace(Place $place): self
     {
-        if (!$this->places->contains($place)) {
-            $this->places[] = $place;
+        if (!$this->Places->contains($place)) {
+            $this->Places[] = $place;
             $place->setPlaceType($this);
         }
 
@@ -109,8 +109,8 @@ class PlaceType
 
     public function removePlace(Place $place): self
     {
-        if ($this->places->contains($place)) {
-            $this->places->removeElement($place);
+        if ($this->Places->contains($place)) {
+            $this->Places->removeElement($place);
             // set the owning side to null (unless already changed)
             if ($place->getPlaceType() === $this) {
                 $place->setPlaceType(null);

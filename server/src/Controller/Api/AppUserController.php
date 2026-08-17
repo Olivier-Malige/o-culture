@@ -3,8 +3,6 @@
 namespace App\Controller\Api;
 
 use App\Entity\AppUser;
-use App\Form\AppUserType;
-use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -32,10 +30,8 @@ class AppUserController extends BaseController
         }
 
         $repository = $this->getDoctrine()->getRepository(AppUser::class);
-        $users = $repository->findall();
-        $serializer = $this->container->get('jms_serializer');
-        $jsonContent = $serializer->serialize($users, 'json', SerializationContext::create()->setGroups(array('appuser_list')));
-        return new Response($jsonContent, Response::HTTP_OK);
+        $users = $repository->findAll();
+        return $this->serializeJson($users, ['appuser_list']);
     }
 
     /**
@@ -51,9 +47,7 @@ class AppUserController extends BaseController
 
 
         $artists = $repository->findByStatus(2);
-        $serializer = $this->container->get('jms_serializer');
-        $jsonContent = $serializer->serialize($artists, 'json', SerializationContext::create()->setGroups(array('appuser_a_detail')));
-        return new Response($jsonContent, Response::HTTP_OK);
+        return $this->serializeJson($artists, ['appuser_a_detail']);
     }
     /**
      * One AppUser.
@@ -110,12 +104,7 @@ class AppUserController extends BaseController
             $groups[] = 'appuser_a_detail';
         }
 
-        $serializer = $this->container->get('jms_serializer');
-        $jsonContent = $serializer->serialize($appUser, 'json', SerializationContext::create()->setGroups($groups));
-        $response = new Response($jsonContent, Response::HTTP_OK);
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response;
+        return $this->serializeJson($appUser, $groups);
     }
 
        
@@ -175,36 +164,24 @@ class AppUserController extends BaseController
             $city = trim(htmlspecialchars(strtoupper($request->get('city'))));
         }
 
-        if(empty($request->get('zipcode'))) {
+        if (empty($request->get('zipcode'))) {
             $zipcode = $user->getZipcode();
         } else {
             $zipcode = trim(htmlspecialchars(($request->get('zipcode'))));
         }
 
-        if(empty($appUser)) {
-            return new JsonResponse(['message' => 'User not found'], Response::HTTP_NOT_FOUND);
-        }
-      
-        if(empty($user)) {
-
-            return new JsonResponse(['message' => 'Utilisateur non modifié !'], Response::HTTP_OK);
-        }
-        else {
-
-            $user->setName($name);
-            $user->setPassword($password);
-            $user->setCity($city);
-            $user->setZipcode($zipcode);
-            $user->setFacebook($facebook);
-            $user->setTwitter($twitter);
-            $user->setWebsite($website);
-            $user->setDescription($description);
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
-            $em->flush();
-            return new JsonResponse(['message' => 'Utilisateur modifié !'], Response::HTTP_OK);
-        }              
-            
+        $user->setName($name);
+        $user->setPassword($password);
+        $user->setCity($city);
+        $user->setZipcode($zipcode);
+        $user->setFacebook($facebook);
+        $user->setTwitter($twitter);
+        $user->setWebsite($website);
+        $user->setDescription($description);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($user);
+        $em->flush();
+        return new JsonResponse(['message' => 'Utilisateur modifié !'], Response::HTTP_OK);
     }
 
 }

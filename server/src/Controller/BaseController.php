@@ -40,4 +40,16 @@ abstract class BaseController extends AbstractController
 
         return new Response($json, Response::HTTP_OK, ['Content-Type' => 'application/json']);
     }
+
+    /**
+     * Serialize a list, or a stable empty-result payload when nothing matches.
+     */
+    protected function serializeList($items, array $groups, string $emptyMessage): Response
+    {
+        if (empty($items)) {
+            return $this->serializeJson(['status' => false, 'error' => 0, 'message' => $emptyMessage]);
+        }
+
+        return $this->serializeJson($items, $groups);
+    }
 }

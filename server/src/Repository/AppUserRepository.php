@@ -130,19 +130,6 @@ class AppUserRepository extends ServiceEntityRepository
         return $paginator;
     }
 
-
-    /*
-    public function findOneBySomeField($value): ?AppUser
-    {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
-
     /**
      * Paginator Helper
      *

@@ -5,14 +5,8 @@ namespace App\Controller\Api;
 use App\Entity\Event;
 use App\Entity\Place;
 use App\Entity\AppUser;
-// use FOS\RestBundle\View\View;
-use App\Repository\EventRepository;
-use App\Repository\PlaceRepository;
-use App\Repository\AppUserRepository;
-use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\BaseController;
 
@@ -21,282 +15,78 @@ class SearchController extends BaseController
     /**
      * @Route("/api/events/search", methods={"POST"})
      */
-
-    public function searchEventByName(Request $request)
+    public function searchEventByName(Request $request): Response
     {
-        $serializer = $this->container->get('jms_serializer');
-        $eventRepository = $this->getDoctrine()->getRepository(Event::class);
-        $events = $eventRepository->findByName(trim(htmlspecialchars((string) $request->get('search', ''))));              
-                
-        if(empty($events)) {
-            
-            $jsonContent = $serializer->serialize(['status' => false, 'error' => 0, 'message' => 'Aucun élément ne correspond à la recherche'], 'json');
-            $response = new Response($jsonContent, Response::HTTP_OK);
-            return $response;
-        }
-        
-        else {       
-            
-            $jsonContent = $serializer->serialize($events, 'json', SerializationContext::create()->setGroups(array('event_list')));
-            $response = new Response($jsonContent, Response::HTTP_OK);
-            return $response;
-        }        
+        $events = $this->getDoctrine()->getRepository(Event::class)->findByName($this->searchTerm($request));
+
+        return $this->serializeList($events, ['event_list'], 'Aucun élément ne correspond à la recherche');
     }
 
-    /**
-     * @Route("/api/search/events/{search}", methods={"GET"})
-     */
-
-    public function searchEventName($search)
-    {
-        $serializer = $this->container->get('jms_serializer');
-        $eventRepository = $this->getDoctrine()->getRepository(Event::class);
-        $events = $eventRepository->findByName(trim(htmlspecialchars($search)));              
-
-        if(empty($events)) {
-            
-            $jsonContent = $serializer->serialize(['status' => false, 'error' => 0, 'message' => 'Aucun élément ne correspond à la recherche'], 'json');
-            $response = new Response($jsonContent, Response::HTTP_OK);
-            return $response;
-        }
-        
-        else {       
-            
-            $jsonContent = $serializer->serialize($events, 'json', SerializationContext::create()->setGroups(array('event_list')));
-            $response = new Response($jsonContent, Response::HTTP_OK);
-            return $response;
-        }        
-    }
-    
     /**
      * @Route("/api/artists/search", methods={"POST"})
      */
-
-    public function searchArtistByName(Request $request) 
+    public function searchArtistByName(Request $request): Response
     {
-        $serializer = $this->container->get('jms_serializer');
-        $appUserRepository = $this->getDoctrine()->getRepository(AppUser::class);
-        $artists = $appUserRepository->findByName(trim(htmlspecialchars((string) $request->get('search', ''))));              
-                
-        if(empty($artists)) {
-            
-            $jsonContent = $serializer->serialize(['status' => false, 'error' => 0, 'message' => 'Aucun élément ne correspond à la recherche'], 'json');
-            $response = new Response($jsonContent, Response::HTTP_OK);
-            return $response;
-        }
-        
-        else {
-            
-            $jsonContent = $serializer->serialize($artists, 'json', SerializationContext::create()->setGroups(array('appuser_list', 'appuser_a_detail')));
-            $response = new Response($jsonContent, Response::HTTP_OK);
-            return $response;
-        }  
-    }
+        $artists = $this->getDoctrine()->getRepository(AppUser::class)->findByName($this->searchTerm($request));
 
-    /**
-     * @Route("/api/search/artists/{search}", methods={"GET"})
-     */
-
-    public function searchArtistName($search) 
-    {
-        $serializer = $this->container->get('jms_serializer');
-        $appUserRepository = $this->getDoctrine()->getRepository(AppUser::class);
-        $artists = $appUserRepository->findByName(trim(htmlspecialchars($search)));              
-                
-        if(empty($artists)) {
-            
-            $jsonContent = $serializer->serialize(['status' => false, 'error' => 0, 'message' => 'Aucun élément ne correspond à la recherche'], 'json');
-            $response = new Response($jsonContent, Response::HTTP_OK);
-            return $response;
-        }
-        
-        else {
-            
-            $jsonContent = $serializer->serialize($artists, 'json', SerializationContext::create()->setGroups(array('appuser_list', 'appuser_a_detail')));
-            $response = new Response($jsonContent, Response::HTTP_OK);
-            return $response;
-        }  
-        
+        return $this->serializeList($artists, ['appuser_list', 'appuser_a_detail'], 'Aucun élément ne correspond à la recherche');
     }
 
     /**
      * @Route("/api/places/search", methods={"POST"})
      */
-
-    public function searchPlaceByName(Request $request) 
+    public function searchPlaceByName(Request $request): Response
     {
-        $serializer = $this->container->get('jms_serializer');
-        $placeRepository = $this->getDoctrine()->getRepository(Place::class);
-        $places = $placeRepository->findByName(trim(htmlspecialchars((string) $request->get('search', ''))));              
-                
-        if(empty($places)) {
-            
-            $jsonContent = $serializer->serialize(['status' => false, 'error' => 0, 'message' => 'Aucun élément ne correspond à la recherche'], 'json');
-            $response = new Response($jsonContent, Response::HTTP_OK);
-            return $response;
-        }
-        
-        else {
-            
-            $jsonContent = $serializer->serialize($places, 'json', SerializationContext::create()->setGroups(array('place_list', 'place_detail')));
-            $response = new Response($jsonContent, Response::HTTP_OK);
-            return $response;
-        }  
-        
+        $places = $this->getDoctrine()->getRepository(Place::class)->findByName($this->searchTerm($request));
+
+        return $this->serializeList($places, ['place_list', 'place_detail'], 'Aucun élément ne correspond à la recherche');
     }
 
     /**
-     * @Route("/api/search/places/{search}", methods={"GET"})
-     */
-
-    public function searchPlaceName($search) 
-    {
-        $serializer = $this->container->get('jms_serializer');
-        $placeRepository = $this->getDoctrine()->getRepository(Place::class);
-        $places = $placeRepository->findByName(trim(htmlspecialchars($search)));              
-                
-        if(empty($places)) {
-            
-            $jsonContent = $serializer->serialize(['status' => false, 'error' => 0, 'message' => 'Aucun élément ne correspond à la recherche'], 'json');
-            $response = new Response($jsonContent, Response::HTTP_OK);
-            return $response;
-        }
-        
-        else {
-            
-            $jsonContent = $serializer->serialize($places, 'json', SerializationContext::create()->setGroups(array('place_list', 'place_detail')));
-            $response = new Response($jsonContent, Response::HTTP_OK);
-            return $response;
-        }  
-        
-    }
-
-    /**
-     * List Events by Type.
      * @Route("/api/type/{type}/events", methods={"GET"})
-     *
-     * 
      */
-    public function getEventsByType($type)
+    public function getEventsByType(string $type): Response
     {
-        $repository = $this->getDoctrine()->getRepository(Event::class);
-        $serializer = $this->container->get('jms_serializer');
+        $events = $this->getDoctrine()->getRepository(Event::class)->findByType(trim(htmlspecialchars($type)));
 
-        $events = $repository->findByType(trim(htmlspecialchars($type)));
-
-        if (empty($events)) {
-
-            $jsonContent = $serializer->serialize(['status' => false, 'error' => 0, 'message' => 'Aucun événement disponible'], 'json');
-            $response = new Response($jsonContent, Response::HTTP_OK);
-            return $response;
-        } else {
-     
-            $jsonContent = $serializer->serialize($events, 'json', SerializationContext::create()->setGroups(array('event_list')));
-            $response = new Response($jsonContent, Response::HTTP_OK);
-            return $response;
-        }  
+        return $this->serializeList($events, ['event_list'], 'Aucun événement disponible');
     }
 
     /**
-     * List Events by Date.
      * @Route("/api/events/date/{date}", methods={"GET"})
-     *
-     * 
      */
-    public function getEventsByDate($date)
+    public function getEventsByDate(string $date): Response
     {
-        $repository = $this->getDoctrine()->getRepository(Event::class);
-        $serializer = $this->container->get('jms_serializer');
-        
-        $events = $repository->findByDate(trim(htmlspecialchars($date)));
+        $events = $this->getDoctrine()->getRepository(Event::class)->findByDate(trim(htmlspecialchars($date)));
 
-        if (empty($events)) {
-
-            $jsonContent = $serializer->serialize(['status' => false, 'error' => 0, 'message' => 'Aucun événement disponible'], 'json');
-            $response = new Response($jsonContent, Response::HTTP_OK);
-            return $response;
-        } else {
-     
-            $jsonContent = $serializer->serialize($events, 'json', SerializationContext::create()->setGroups(array('event_list')));
-            $response = new Response($jsonContent, Response::HTTP_OK);
-            return $response;
-        }  
+        return $this->serializeList($events, ['event_list'], 'Aucun événement disponible');
     }
 
     /**
-     * List Events by City.
-     * @Route("/api/city/{city}/events", methods={"GET"})
-     *
-     * 
-     */
-    public function getEventsByPlaceCity($city)
-    {
-        $repository = $this->getDoctrine()->getRepository(Event::class);
-        $serializer = $this->container->get('jms_serializer');
-        
-        $events = $repository->findByCity(trim(htmlspecialchars($city)));
-        // dump($events);die;
-        if (empty($events)) {
-
-            $jsonContent = $serializer->serialize(['status' => false, 'error' => 0, 'message' => 'Aucun événement disponible'], 'json');
-            $response = new Response($jsonContent, Response::HTTP_OK);
-            return $response;
-        } 
-        else {
-     
-            $jsonContent = $serializer->serialize($events, 'json', SerializationContext::create()->setGroups(array('event_list')));
-            $response = new Response($jsonContent, Response::HTTP_OK);
-            return $response;
-        }  
-    }
-
-    /**
-     * List Events by Zipcode.
      * @Route("/api/zipcode/{zipcode}/events", methods={"GET"})
-     *
-     * 
      */
-    public function getEventsByDepartment($zipcode)
+    public function getEventsByDepartment(string $zipcode): Response
     {
-        $repository = $this->getDoctrine()->getRepository(Event::class);
-        $serializer = $this->container->get('jms_serializer');
-        // dump($zipcode);
-        $events = $repository->findByZipCode(trim(htmlspecialchars($zipcode)));
-        // dump($events);die;
-        if (empty($events)) {
+        $events = $this->getDoctrine()->getRepository(Event::class)->findByZipCode(trim(htmlspecialchars($zipcode)));
 
-            $jsonContent = $serializer->serialize(['status' => false, 'error' => 0, 'message' => 'Aucun événement disponible'], 'json');
-            $response = new Response($jsonContent, Response::HTTP_OK);
-            return $response;
-        } else {
-
-            $jsonContent = $serializer->serialize($events, 'json', SerializationContext::create()->setGroups(array('event_list','event_detail')));
-            $response = new Response($jsonContent, Response::HTTP_OK);
-            return $response;
-        }  
+        return $this->serializeList($events, ['event_list', 'event_detail'], 'Aucun événement disponible');
     }
 
     /**
-     * List Events by Artists.
      * @Route("/api/artists/{artist}/events", methods={"GET"})
-     * 
      */
-    public function getEventsByArtist($artist)
+    public function getEventsByArtist(string $artist): Response
     {
-        $repository = $this->getDoctrine()->getRepository(Event::class);
-        $serializer = $this->container->get('jms_serializer');
-        // dump($artist);die;
-        $events = $repository->findByArtist(trim(htmlspecialchars($artist)));
-        // dump($events);die;
-        if (empty($events)) {
-            $jsonContent = $serializer->serialize(['status' => false, 'error' => 0, 'message' => 'Aucun événement disponible'], 'json');
-            $response = new Response($jsonContent, Response::HTTP_OK);
-            return $response;
-        } else {
+        $events = $this->getDoctrine()->getRepository(Event::class)->findByArtist(trim(htmlspecialchars($artist)));
 
-            $jsonContent = $serializer->serialize($events, 'json', SerializationContext::create()->setGroups(array('event_list','event_detail')));
-            $response = new Response($jsonContent, Response::HTTP_OK);
-            return $response;
-        }  
+        return $this->serializeList($events, ['event_list', 'event_detail'], 'Aucun événement disponible');
+    }
+
+    /**
+     * Read and sanitize the JSON/form search field.
+     */
+    private function searchTerm(Request $request): string
+    {
+        return trim(htmlspecialchars((string) $request->get('search', '')));
     }
 }

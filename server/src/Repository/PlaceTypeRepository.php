@@ -48,18 +48,6 @@ class PlaceTypeRepository extends ServiceEntityRepository
         return $paginator;
     }
 
-    /*
-    public function findOneBySomeField($value): ?PlaceType
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
-
     /**
      * Paginator Helper
      *

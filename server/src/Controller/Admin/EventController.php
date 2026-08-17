@@ -83,7 +83,6 @@ class EventController extends BaseController
      */
     public function show(Event $event): Response
     {
-        // dump($event);die;
         return $this->render('admin/event/show.html.twig', ['event' => $event]);
     }
 

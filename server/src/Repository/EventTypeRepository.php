@@ -20,10 +20,6 @@ class EventTypeRepository extends ServiceEntityRepository
         parent::__construct($registry, EventType::class);
     }
 
-//    /**
-//     * @return EventType[] Returns an array of EventType objects
-//     */
-    
     public function findByEventTypeName($value)
     {
         return $this->createQueryBuilder('e')
@@ -48,18 +44,6 @@ class EventTypeRepository extends ServiceEntityRepository
 
         return $paginator;
     }
-
-    /*
-    public function findOneBySomeField($value): ?EventType
-    {
-        return $this->createQueryBuilder('e')
-            ->andWhere('e.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 
     /**
      * Paginator Helper

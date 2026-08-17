@@ -21,25 +21,6 @@ class EventRepository extends ServiceEntityRepository
         parent::__construct($registry, Event::class);
     }
 
-//    /**
-//     * @return Event[] Returns an array of Event objects
-//     */
-    
-    public function findByCity($value)
-    {
-        return $this->createQueryBuilder('e')
-            ->select('e')
-            ->leftJoin('e.eventPlace' , 'p')
-            // ->addSelect('p')
-            ->andWhere('p.city = :val')
-            ->setParameter('val',$value)
-            // ->orderBy('e.id', 'ASC')
-            // ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    
     public function findByZipCode($value)
     {
         return $this->createQueryBuilder('e')

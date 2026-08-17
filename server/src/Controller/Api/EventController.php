@@ -5,10 +5,8 @@ namespace App\Controller\Api;
 use DateTime;
 use App\Entity\Event;
 use App\Entity\Place;
-use App\Entity\AppUser;
 use App\Entity\Comment;
 use App\Entity\EventType;
-use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -29,14 +27,9 @@ class EventController extends BaseController
      */
     public function getEvents()
     {
-        $repository = $this->getDoctrine()->getRepository(Event::class);
-    
-        $events = $repository->findEventsByCurrentDate();
-        $serializer = $this->container->get('jms_serializer');
-        $jsonContent = $serializer->serialize($events, 'json', SerializationContext::create()->setGroups(array('event_list')));
-        $response = new Response($jsonContent, Response::HTTP_OK);
+        $events = $this->getDoctrine()->getRepository(Event::class)->findEventsByCurrentDate();
 
-        return $response;
+        return $this->serializeJson($events, ['event_list']);
     }
 
     
@@ -46,13 +39,9 @@ class EventController extends BaseController
      *
      * 
      */
-    public function getEvent(Request $request, Event $event)
+    public function getEvent(Event $event)
     {
-        $serializer = $this->container->get('jms_serializer');
-        $jsonContent = $serializer->serialize($event, 'json', SerializationContext::create()->setGroups(array('event_list', 'event_detail')));
-        $response = new Response($jsonContent, Response::HTTP_OK);
-
-        return $response;
+        return $this->serializeJson($event, ['event_list', 'event_detail']);
     }
 
     /**
@@ -87,9 +76,6 @@ class EventController extends BaseController
         
         $user = $this->getuser();
         if ($user->getRole()->getCode() === 'ROLE_ARTIST' || $user->getRole()->getCode() === 'ROLE_ORGANIZER') {
-            
-            $repositoryUser = $this->getDoctrine()->getRepository(AppUser::class);
-            $artist = $repositoryUser->findByUsername('Bakers');
             $event = new Event();
 
             $repositoryPlace = $this->getDoctrine()->getRepository(Place::class);
@@ -133,32 +119,19 @@ class EventController extends BaseController
                 $event->setPrice(null);
             }
             $plannedDate = new DateTime($request->get('planned_date'));
-            // $artiste = $repositoryUser->find($request->get('artist'));
 
             $event->setName(trim(htmlspecialchars($request->get('name'))));
             $event->setPlannedDate($plannedDate);
             $event->setDescription(trim(htmlspecialchars($request->get('description'))));
-            // $event->setImage('EventDefault.jpg');
 
             $event->setAppUserCreator($user);
-            if (!empty($artist)) {
-                $event->addAppUserPerformer($artist[0]);
-            }
             $event->setEventPlace($place[0]);
-         
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($event);
-            if (empty($event)) {
+            $em->flush();
 
-                return new JsonResponse(['message' => 'Event non créé'], Response::HTTP_OK);
-
-            } else {
-
-                $em->flush();
-
-                return new JsonResponse(['message' => "L'événément portant le nom : '" . $event->getName() . "' a été créé"], Response::HTTP_OK);
-            }
+            return new JsonResponse(['message' => "L'événément portant le nom : '" . $event->getName() . "' a été créé"], Response::HTTP_OK);
 
         } else {
             return new JsonResponse(['message' => "Veuillez vous connecter en tant qu'Organisateur ou Artiste"], Response::HTTP_OK);
@@ -256,11 +229,6 @@ class EventController extends BaseController
     {
         $user = $this->getUser();
         if ($user->getId() === $event->getAppUserCreator()->getId()) {
-            if (empty($event)) {
-
-                return new JsonResponse(['message' => 'Event not found'], Response::HTTP_NOT_FOUND);
-            }
-
             $em = $this->getDoctrine()->getManager();
             $em->remove($event);
             $em->flush();
