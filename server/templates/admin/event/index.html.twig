@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des événements{% endblock %}
+
+{% block body %}
+    <h1>Liste des événements</h1>
+    {{ include('admin/partials/navevent.html.twig') }}
+    {% for message in app.flashes('notice') %}
+    <div class="alert alert-dismissible alert-info">
+        {{ message }}
+    </div>
+    {% endfor %}
+    <table class="table table-hover">
+        <thead>
+            <tr class="table-primary">
+                <th>Nom</th>
+                <th>Date</th>
+                <th>Nombre de spectateurs</th>
+                <th>Prix</th>
+                <th>Status</th>
+                <th>Créé le</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for event in events %}
+            <tr>
+                <td>{{ event.name }}</td>
+                <td>{{ event.plannedDate ? event.plannedDate|date('d-m-Y à H:i') : '' }}</td>
+                <td>{{ event.nbSpectator }}</td>
+                <td>{{ event.price }}</td>
+                <td>{{ event.status }}</td>
+                <td>{{ event.createdAt ? event.createdAt|date('d-m-Y à H:i') : '' }}</td>
+                <td>
+                    <a href="{{ path('event_show', {'id': event.id}) }}" class="btn btn-dark mr-1">Détails</a>
+                    <a href="{{ path('event_edit', {'id': event.id}) }}" class="btn btn-primary mr-1">Modifier</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="11">Aucune donnée trouvée</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% if maxPages is defined and maxPages > 1  %}
+    <ul class="pagination">
+        <li {{ thisPage == 1 ? 'class="disabled"' }} class="page-item">
+            <a class="page-link" href="{{ path('event_index', {page: thisPage-1 < 1 ? 1 : thisPage-1}) }}"><i class="fas fa-arrow-left"></i></a>
+        </li>
+        {% for i in 1..maxPages %}
+        <li {{ thisPage == i ? 'class="active"' }} class="page-item">
+            <a class="page-link" href="{{ path('event_index', {page: i}) }}">{{ i }}</a>
+        </li>
+        {% endfor %}
+        <li {{ thisPage == maxPages ? 'class="disabled"' }} class="page-item">
+            <a class="page-link" href="{{ path('event_index', {page: thisPage+1 <= maxPages ? thisPage+1 : thisPage}) }}"><i class="fas fa-arrow-right"></i></a>
+        </li>
+    </ul>
+    {% endif %}
+{% endblock %}

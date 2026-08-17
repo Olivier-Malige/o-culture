@@ -1,0 +1,43 @@
+@import src/styles/vars
+.cards
+  margin-top: 2rem
+  display: flex
+  flex-direction: row
+  flex-wrap: wrap
+  justify-content: center
+
+.card
+  padding: 0.5rem
+  color: $white
+  font-size: 1.5rem
+  font-weight: bold
+  margin-left: 2rem
+  margin-top: 2rem
+  display: flex
+  flex-direction: column
+  justify-content: space-between
+  width: 25rem
+  height: 15rem
+  border-radius: 5px
+  background-size: cover
+  background-position: center
+  position: relative
+  &:hover
+    transform: translate(0, -2px)
+    box-shadow: 0 0 20px $primary
+  &-title
+    font-family: 'Gloria Hallelujah', cursive
+    cursor: pointer
+    padding: 2rem 0
+    display: flex
+    justify-content: center
+    font-size: 1.5rem
+    text-shadow: 0 0 15px $black
+  &-detail
+    margin-bottom: 0.5rem
+    display: flex
+    justify-content: space-around
+    font-size: 1rem
+    padding: 0.5rem
+    border-radius: 5px
+    background-color: $textBackground

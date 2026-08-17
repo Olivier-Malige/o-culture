@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier le type d'événement{% endblock %}
+
+{% block body %}
+    <h1>Modifier le type d'événement - {{ event_type.name }}</h1>
+
+    {{ include('admin/event_type/_form.html.twig', {'button_label': 'Sauvegarder'}) }}
+
+    <div class="d-flex mt-4">
+        <a href="{{ path('event_type_index', {page: 1}) }}" class="btn btn-dark mr-1">Retour à la liste des types d'événements</a>
+        {{ include('admin/event_type/_delete_form.html.twig') }}
+    </div>
+{% endblock %}

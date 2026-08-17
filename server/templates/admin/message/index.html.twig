@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Message index{% endblock %}
+
+{% block body %}
+    <div>
+        <h2>Messages envoyés</h2>
+    <table class="table table-hover">
+        <thead>
+            <tr class="table-primary">
+                    <th>Content</th>
+                    <th>Envoyé le :</th>
+                    <th>Envoyé à :</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for message in messagesSend %}
+                <tr>
+                    <td>{{ message.content }}</td>
+                    <td>{{ message.createdAt ? message.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>{{ message.receiver }}</td>
+                    <td>
+                        <a href="{{ path('message_show', {'id': message.id}) }}" class="btn btn-dark mr-1">Détails</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">Vous n'avez pas de messages envoyés</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <h2>Messages reçus</h2>
+        <table class="table table-hover">
+            <thead>
+                <tr class="table-primary">
+                    <th>Content</th>
+                    <th>Envoyé le :</th>
+                    <th>Envoyé par :</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for message in messageReceived %}
+                <tr>
+                    <td>{{ message.content }}</td>
+                    <td>{{ message.createdAt ? message.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>{{ message.expeditor }}</td>
+                    <td>
+                        <a href="{{ path('message_show', {'id': message.id}) }}" class="btn btn-dark mr-1">Détails</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">Vous n'avez pas de messages reçus</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <a class="btn btn-success"href="{{ path('message_new') }}">Envoyer un message</a>
+{% endblock %}

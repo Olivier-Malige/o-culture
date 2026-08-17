@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Message{% endblock %}
+
+{% block body %}
+<table class="table table-hover">
+    <tbody>
+        <tr>
+            <th>Envoyé à :</th>
+            <td>{{ message.receiver }}</td>
+        </tr>
+        <tr>
+            <th>Date</th>
+            <td>{{ message.createdAt ? message.createdAt|date('d/m/Y à H:i') : '' }}</td>
+        </tr>
+        <tr>
+            <th>Contenu</th>
+            <td>
+                {{ message.content }}
+            </td>
+        </tr>
+    </tbody>
+</table>    
+<div class="d-flex">
+    <a href="{{ path('message_index') }}"class="btn btn-dark mr-1">Retour à la liste des messages</a>
+
+</div>
+{% endblock %}

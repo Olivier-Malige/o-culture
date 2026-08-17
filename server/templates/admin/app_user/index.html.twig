@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des utilisateurs{% endblock %}
+
+{% block body %}
+    <h1>Liste des utilisateurs</h1>
+        {{ include('admin/partials/navappusers.html.twig') }}
+    {% for message in app.flashes('notice') %}
+    <div class="alert alert-dismissible alert-info">
+        {{ message }}
+    </div>
+    {% endfor %}
+    <table class="table table-hover">
+        <thead>
+            <tr class="table-primary">
+                <th>Pseudo</th>
+                <th>Nom</th>
+                <th>Email</th>
+                <th>Actif</th>
+                <th>Role</th>
+                <th>Créé le</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for app_user in app_users %}
+            <tr>
+                <td>{{ app_user.username }}</td>
+                <td>{{ app_user.name }}</td> 
+                <td>{{ app_user.email }}</td>
+                <td>{{ app_user.isActive ? 'Oui' : 'Non' }}</td> 
+                <td>{{ app_user.role }}</td>
+                <td>{{ app_user.createdAt ? app_user.createdAt|date('d-m-Y à H:i') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_user_show', {'id': app_user.id}) }}" class="btn btn-dark mr-1">Détails</a>
+                    <a href="{{ path('app_user_edit', {'id': app_user.id}) }}" class="btn btn-primary mr-1">Modifier</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="15">Aucune donnée trouvée</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% if maxPages is defined and maxPages > 1  %}
+    <ul class="pagination">
+        <li {{ thisPage == 1 ? 'class="disabled"' }} class="page-item">
+            <a class="page-link" href="{{ path('app_user_index', {page: thisPage-1 < 1 ? 1 : thisPage-1}) }}"><i class="fas fa-arrow-left"></i></a>
+        </li>
+        {% for i in 1..maxPages %}
+        <li {{ thisPage == i ? 'class="active"' }} class="page-item">
+            <a class="page-link" href="{{ path('app_user_index', {page: i}) }}">{{ i }}</a>
+        </li>
+        {% endfor %}
+        <li {{ thisPage == maxPages ? 'class="disabled"' }} class="page-item">
+            <a class="page-link" href="{{ path('app_user_index', {page: thisPage+1 <= maxPages ? thisPage+1 : thisPage}) }}"><i class="fas fa-arrow-right"></i></a>
+        </li>
+    </ul>
+    {% endif %}
+{% endblock %}

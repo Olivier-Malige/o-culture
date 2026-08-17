@@ -1,0 +1,57 @@
+services:
+  db:
+    image: mariadb:10.11
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-oculture}
+      MARIADB_DATABASE: ${MYSQL_DATABASE:-oculture}
+      MARIADB_USER: ${MYSQL_USER:-oculture}
+      MARIADB_PASSWORD: ${MYSQL_PASSWORD:-oculture}
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./docker/db/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 15s
+
+  api:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    environment:
+      APP_ENV: prod
+      APP_DEBUG: "0"
+      APP_SECRET: ${APP_SECRET:-changeme-local-app-secret}
+      DATABASE_URL: mysql://${MYSQL_USER:-oculture}:${MYSQL_PASSWORD:-oculture}@db:3306/${MYSQL_DATABASE:-oculture}
+      MAILER_URL: "null://localhost"
+      CORS_ALLOW_ORIGIN: ${CORS_ALLOW_ORIGIN:-^https?://localhost(:[0-9]+)?$}
+      JWT_SECRET_KEY: /var/www/html/config/jwt/private.pem
+      JWT_PUBLIC_KEY: /var/www/html/config/jwt/public.pem
+      JWT_PASSPHRASE: ${JWT_PASSPHRASE:-changeme-local-jwt-passphrase}
+      TRUSTED_PROXIES: ${TRUSTED_PROXIES:-10.0.0.0/8,172.16.0.0/12,192.168.0.0/16}
+      DEMO_PASSWORD: ${DEMO_PASSWORD:-oculture}
+    volumes:
+      - jwt_data:/var/www/html/config/jwt
+    depends_on:
+      db:
+        condition: service_healthy
+
+  web:
+    build:
+      context: .
+      dockerfile: docker/web/Dockerfile
+      args:
+        API_URL: ""
+    ports:
+      - "8080:8080"
+    environment:
+      SITE_ADDRESS: ":8080"
+      ACME_EMAIL: ${ACME_EMAIL:-dev@localhost}
+    depends_on:
+      - api
+
+volumes:
+  db_data:
+  jwt_data:

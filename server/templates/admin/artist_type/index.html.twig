@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Types d'artistes{% endblock %}
+
+{% block body %}
+    <h1>Types d'artistes</h1>
+    <a href="{{ path('artist_type_new') }}" class="btn btn-success mr-1 mb-4">Ajouter un nouveau type d'artiste</a>
+    {% for message in app.flashes('notice') %}
+    <div class="alert alert-dismissible alert-info">
+        {{ message }}
+    </div>
+    {% endfor %}
+    <table class="table table-hover">
+        <thead class="table-primary">
+            <tr>
+                <th>Nom</th>
+                <th>Actif</th>
+                <th>Créé le</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for artist_type in artist_types %}
+            <tr>
+                <td>{{ artist_type.name }}</td>
+                <td>{{ artist_type.isActive ? 'Oui' : 'Non' }}</td>
+                <td>{{ artist_type.createdAt ? artist_type.createdAt|date('d-m-Y à H:i') : '' }}</td>
+                <td>
+                    <a href="{{ path('artist_type_show', {'id': artist_type.id}) }}" class="btn btn-dark mr-1">Détails</a>
+                    <a href="{{ path('artist_type_edit', {'id': artist_type.id}) }}" class="btn btn-primary mr-1">Modifier</a> 
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">Aucune donnée trouvée</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% if maxPages is defined and maxPages > 1  %}
+    <ul class="pagination">
+        <li {{ thisPage == 1 ? 'class="disabled"' }} class="page-item">
+            <a class="page-link" href="{{ path('artist_type_index', {page: thisPage-1 < 1 ? 1 : thisPage-1}) }}"><i class="fas fa-arrow-left"></i></a>
+        </li>
+        {% for i in 1..maxPages %}
+        <li {{ thisPage == i ? 'class="active"' }} class="page-item">
+            <a class="page-link" href="{{ path('artist_type_index', {page: i}) }}">{{ i }}</a>
+        </li>
+        {% endfor %}
+        <li {{ thisPage == maxPages ? 'class="disabled"' }} class="page-item">
+            <a class="page-link" href="{{ path('artist_type_index', {page: thisPage+1 <= maxPages ? thisPage+1 : thisPage}) }}"><i class="fas fa-arrow-right"></i></a>
+        </li>
+    </ul>
+    {% endif %}
+{% endblock %}

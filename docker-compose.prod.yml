@@ -1,0 +1,28 @@
+services:
+  db:
+    restart: unless-stopped
+
+  api:
+    restart: unless-stopped
+    environment:
+      APP_DEBUG: "0"
+      TRUSTED_HOSTS: ${TRUSTED_HOSTS}
+      TRUSTED_PROXIES: ${TRUSTED_PROXIES:-10.0.0.0/8,172.16.0.0/12,192.168.0.0/16}
+      CORS_ALLOW_ORIGIN: ${CORS_ALLOW_ORIGIN}
+
+  web:
+    restart: unless-stopped
+    ports: !override
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      SITE_ADDRESS: ${DOMAIN}
+      ACME_EMAIL: ${ACME_EMAIL}
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  caddy_data:
+  caddy_config:

@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des rôles{% endblock %}
+
+{% block body %}
+    <h1>Liste des rôles</h1>
+    {% for message in app.flashes('notice') %}
+    <div class="alert alert-dismissible alert-info">
+    {{ message }}
+    </div>
+    {% endfor %}
+    <a href="{{ path('role_new') }}" class="btn btn-success mr-1 mb-3">Ajouter un nouveau rôle</a>
+
+    <table class="table table-hover">
+        <thead>
+            <tr class="table-primary">
+                <th>Nom</th>
+                <th>Code</th>
+                <th>Actif</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for role in roles %}
+            <tr>
+                <td>{{ role.name }}</td>
+                <td>{{ role.code }}</td>
+                <td>{{ role.isActive ? 'Oui' : 'Non' }}</td>
+                <td>
+                    <a href="{{ path('role_show', {'id': role.id}) }}" class="btn btn-dark mr-1">Détails</a>
+                    <a href="{{ path('role_edit', {'id': role.id}) }}" class="btn btn-primary mr-1">Modifier</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">Aucune donnée trouvée</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

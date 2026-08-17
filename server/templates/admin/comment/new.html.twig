@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter un nouveau commentaire{% endblock %}
+
+{% block body %}
+    <h1>Ajouter un nouveau commentaire</h1>
+
+    {{ include('admin/comment/_form.html.twig') }}
+
+    <a href="{{ path('comment_index', {page: 1}) }}" class="btn btn-dark mr-1 mt-3">Retour à la liste des commentaires</a>
+{% endblock %}

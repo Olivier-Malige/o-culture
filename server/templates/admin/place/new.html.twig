@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un nouveau lieu{% endblock %}
+
+{% block body %}
+    <h1>Créer un nouveau lieu</h1>
+
+    {{ include('admin/place/_form.html.twig') }}
+
+    <a href="{{ path('place_index', {page: 1}) }}" class="btn btn-dark mr-1">Retour à la liste des lieux</a>
+{% endblock %}

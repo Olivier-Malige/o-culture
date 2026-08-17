@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des tags{% endblock %}
+
+{% block body %}
+    <h1>Liste des tags</h1>
+    
+    {{ include('admin/partials/navevent.html.twig') }}
+    <a href="{{ path('tag_new') }}" class="btn btn-success mr-1 mb-4">Ajouter un nouveau tag</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Créé le</th>
+                <th>Actif</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for tag in tags %}
+            <tr>
+                <td>{{ tag.name }}</td>
+                <td>{{ tag.createdAt ? tag.createdAt|date('d-m-Y à H:i') : '' }}</td>
+                <td>{{ tag.isActive ? 'Oui' : 'Non' }}</td>
+                <td>
+                    <a href="{{ path('tag_show', {'id': tag.id}) }}" class="btn btn-dark mr-1">Détails</a>
+                    <a href="{{ path('tag_edit', {'id': tag.id}) }}" class="btn btn-primary mr-1">Modifier</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">Aucune donnée trouvée</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% if maxPages is defined and maxPages > 1 %}
+    <ul class="pagination">
+        <li {{ thisPage == 1 ? 'class="disabled"' }} class="page-item">
+            <a class="page-link" href="{{ path('tag_index', {page: thisPage-1 < 1 ? 1 : thisPage-1}) }}"><i class="fas fa-arrow-left"></i></a>
+        </li>
+        {% for i in 1..maxPages %}
+        <li {{ thisPage == i ? 'class="active"' }} class="page-item">
+            <a class="page-link" href="{{ path('tag_index', {page: i}) }}">{{ i }}</a>
+        </li>
+        {% endfor %}
+        <li {{ thisPage == maxPages ? 'class="disabled"' }} class="page-item">
+            <a class="page-link" href="{{ path('tag_index', {page: thisPage+1 <= maxPages ? thisPage+1 : thisPage}) }}"><i class="fas fa-arrow-right"></i></a>
+        </li>
+    </ul>
+    {% endif %}
+{% endblock %}

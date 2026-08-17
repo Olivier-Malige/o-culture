@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un nouveau rôle{% endblock %}
+
+{% block body %}
+    <h1>Créer un nouveau rôle</h1>
+
+    {{ include('admin/role/_form.html.twig') }}
+
+    <a href="{{ path('role_index') }}" class="btn btn-dark mr-1 mt-3">Retour à la liste des rôles</a>
+
+{% endblock %}

@@ -1,0 +1,99 @@
+@import vars
+@import reset
+
+body
+	background-color: $background
+	font-family: 'Roboto', serif
+
+main
+  padding-top: 50px
+
+.section
+	font-family: $titlefont
+	$font-size: 16px
+	$font-color: $noir80
+	width: 90vw
+	margin: 40px auto
+	@media only screen and (min-width: 760px)
+		width: 85vw
+
+	h1
+		font-size: $font-size * 1.4
+		font-weight: 800
+		margin-bottom: 0px
+		line-height: 30px
+		letter-spacing: normal
+		color: $font-color
+
+	h2
+		font-size: $font-size
+		line-height: 22px
+		letter-spacing: normal
+		color: $font-color
+		font-weight: normal
+
+	h3
+		font-size: $font-size / 1.33
+		font-weight: 800
+		font-size: 12px
+		line-height: 16px
+		letter-spacing: normal
+		text-transform: uppercase
+		color: $font-color
+		text-overflow: ellipsis
+		white-space: nowrap
+
+	.sentence
+		word-wrap: break-word
+		text-transform: none
+		font-weight: normal
+		white-space: normal
+
+	h4
+		font-size: $font-size * 1.0625
+		font-weight: 800
+		font-size: 17px
+		line-height: 21px
+		max-height: 42px
+		text-overflow: ellipsis
+		display: -webkit-box
+		margin-bottom: 4px
+		overflow: hidden
+
+	h5
+		font-size: $font-size / 1.15
+		font-weight: normal
+		font-size: 14px
+		line-height: 18px
+		letter-spacing: normal
+		color: $font-color
+
+button
+	cursor: pointer
+	// display: block
+	// position: relative
+	text-align: center
+	width: auto
+	height: 35px
+	font-size: 14px
+	line-height: 18px
+	letter-spacing: normal
+	padding-top: 8px
+	padding-bottom: 8px
+	font-weight: 600
+	padding-left: 16px
+	padding-right: 16px
+	min-width: 51.7771px
+	box-shadow: 0 0 .5em 0
+	color: rgb(72, 72, 72)
+	// margin: 0 auto
+	text-decoration: none
+	border-radius: 4px
+	border-width: 1px
+	border-style: solid
+	background: rgb(255, 255, 255)
+	border-color: transparent
+
+@media screen and (max-width: 760px)
+  html
+    font-size: 12px

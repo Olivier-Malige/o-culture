@@ -1,0 +1,93 @@
+@import src/styles/vars
+
+.odd
+  background-color: $white
+
+.content
+  padding: 2rem 0
+#profile
+  .info
+    font-size: 1.2rem
+  section
+    padding: 2rem 0
+    margin-bottom: 5rem
+  .cards
+    margin-top: 2rem
+    display: flex
+    flex-direction: row
+    flex-wrap: wrap
+    justify-content: center
+    .more
+      margin-left: 2rem
+      margin-top: 2rem
+      width: 25rem
+      display: flex
+  .card
+    padding: 0.5rem
+    color: $white
+    font-size: 1.5rem
+    font-weight: bold
+    margin-left: 2rem
+    margin-top: 2rem
+    display: flex
+    flex-direction: column
+    justify-content: space-between
+    width: 25rem
+    height: 15rem
+    border-radius: 5px
+    background-size: cover
+    background-position: center
+    position: relative
+    &:hover
+      transform: translate(0, -2px)
+      box-shadow: 0 0 20px $primary
+    &-title
+      font-family: 'Gloria Hallelujah', cursive
+      cursor: pointer
+      padding: 2rem 0
+      display: flex
+      justify-content: center
+      font-size: 1.8rem
+      text-shadow: 0 0 15px $black
+    &-detail
+      margin-bottom: 0.5rem
+      display: flex
+      justify-content: space-around
+      font-size: 1rem
+  .tools
+    margin-top: 0.2rem
+    margin-right: 0.5rem
+    display: flex
+    justify-content: space-between
+    &-tool
+      cursor: pointer
+      margin-left: 0.5rem
+      font-size: 2rem
+      transition: 0.3s
+      &:hover
+        transform: scale(1.2)
+  .pluscircle
+    margin: auto
+    cursor: pointer
+    color: $secondary
+    transition: 0.3s
+  .pluscircle:hover
+    color: $primary
+    transform: scale(1.1)
+
+  .profile-user
+    position: absolute
+    bottom: 17%
+    left: 47%
+    // transform: translate(-50%)
+    display: block
+    color: $white
+    cursor: pointer
+    &:hover
+      color: $secondary
+  h4
+    margin: 3rem
+    font-size: 3rem
+    text-align: center
+    text-transform: capitalize
+    text-shadow: 0 0 10px $primary

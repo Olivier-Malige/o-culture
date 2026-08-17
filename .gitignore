@@ -1,0 +1,29 @@
+# Environment and secrets
+.env
+.env.prod
+.env.local
+*.pem
+
+# Frontend
+client/node_modules/
+client/dist/
+yarn-error.log
+npm-debug.log
+
+# Backend
+server/vendor/
+server/var/
+server/public/bundles/
+server/.env
+server/.phpunit
+server/phpunit.xml
+server/.web-server-pid
+server/config/jwt/*.pem
+
+# IDE / OS
+.idea/
+.vscode/
+.vs/
+.vs-code/
+.DS_Store
+Thumbs.db

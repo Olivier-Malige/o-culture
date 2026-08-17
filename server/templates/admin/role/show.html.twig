@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Rôle {{ role.name }}{% endblock %}
+
+{% block body %}
+    <h1>Rôle {{ role.name }}</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Nom</th>
+                <td>{{ role.name }}</td>
+            </tr>
+            <tr>
+                <th>Code</th>
+                <td>{{ role.code }}</td>
+            </tr>
+            <tr>
+                <th>Actif</th>
+                <td>{{ role.isActive ? 'Oui' : 'Non' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="d-flex">
+        <a href="{{ path('role_index') }}" class="btn btn-dark mr-1">Retour à la liste des rôles</a>
+        <a href="{{ path('role_edit', {'id': role.id}) }}" class="btn btn-primary mr-1">Modifier</a>
+        {{ include('admin/role/_delete_form.html.twig') }}
+    </div>
+{% endblock %}

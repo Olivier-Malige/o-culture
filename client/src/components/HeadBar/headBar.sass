@@ -1,0 +1,220 @@
+/**
+ * Import
+ */
+@import src/styles/vars
+@import url('https://fonts.googleapis.com/css?family=Righteous')
+/**
+ * Styles
+ */
+
+// Banner height (here the search bar)
+$size-banner: 50px
+
+@mixin to-the-left
+    box-sizing: border-box
+    // min-width: 25%
+    display: flex
+
+.search
+    // width: 100%
+    background-color: $black
+    color: $white
+    display: flex
+    position: fixed
+    top: 0
+    left: 0
+    right: 0
+    height: $size-banner
+    z-index: 10
+    &-icon
+        margin-left: 1rem
+    &-icon:hover
+        cursor: pointer
+        transform: scale(1.2)
+    &_wrapper
+        display: flex
+        flex-wrap: nowrap
+        align-items: center
+        // width: 100vw
+
+        @media only screen and (min-width: 737px)
+            margin: 0 auto
+                // width: 100%
+            max-width: 1158px
+
+    &-logo
+        @include to-the-left
+        justify-content: flex-end
+        padding-right: 1rem
+        font-family: 'Righteous', cursive
+        font-size: 3rem
+        text-shadow: 1px 1px 20px $primary
+        &:hover
+            transform: scale(1.1)
+
+        @media only screen and (min-width: 737px)
+            padding-left: 0
+
+
+    &-bar
+        box-sizing: border-box
+
+        &:focus-within
+            ~ .curtain, > .search-bar--results
+                display: block
+                opacity: 1
+                transition: all 350ms ease
+
+        &--form
+            &--icon
+                @mixin icon
+                    height: $size-banner
+                    width: 40px
+                    position: absolute
+                    top: 0
+                    background-repeat: no-repeat
+                    background-position: 10px 50%
+
+                &_search
+                    @include icon
+                    top: 0
+                    background-image: url(/src/assets/image_search.svg)
+
+                &_close
+                    @include icon
+                    right: .5em
+                    top: -$size-banner
+                    background-image: url(/src/assets/image_close.svg)
+
+            &--input
+                font-family: 'Montserrat', sans-serif
+                color: $white
+                font-size: 1.1em
+                width: calc(100vw - (44px + 6em))
+                // min-width: 100%
+                height: 26px
+                padding-left: 2em
+                padding-right: 2em
+                // box-sizing: border-box
+                border-radius: 4px
+                border: 1px black solid
+                background-color: $noir75
+                transition: all 350ms ease
+
+                @media only screen and (min-width: 737px)
+                    width: 50vw
+                    max-width: 900px
+
+                &:focus
+                    width: calc(100vw - (44px + 4em))
+                    height: $size-banner - 2px
+                    outline: none
+                    border-radius: unset
+                    border: none
+                    border-left: 1px black solid
+                    border-right: 1px black solid
+
+                    @media only screen and (min-width: 737px)
+                        width: 50vw
+                        max-width: 900px
+
+        &--results
+            height: auto
+            width: 100%
+            max-width: 900px
+            background-color: $noir10
+            padding: 1em
+            position: absolute
+            left: 0
+            display: none
+            opacity: 0
+            top: $size-banner
+            z-index: 10000
+            // transition: all 350ms
+            transition: all 200ms ease
+
+            @media only screen and (min-width: 737px)
+                left: unset
+                width: 50vw
+                max-width: 900px
+
+            &_type
+                font-weight: 600
+                text-transform: uppercase
+                font-size: 14px
+                color: $noir80
+                margin-bottom: 0.25em
+
+            ul
+                margin-bottom: 1em
+                margin-left: 1em
+
+                li
+                    color: $black
+                    margin: 0.3em
+
+
+    &-settings
+        @include to-the-left
+        justify-content: flex-start
+        padding-left: 1em
+        display: none
+
+        @media only screen and (min-width: 737px)
+            display: block
+
+        &-profil
+            display: flex
+            align-items: center
+            justify-content: space-between
+            width: auto
+
+            &--link
+                color: $white
+                vertical-align: center
+                padding-right: 1em
+                text-decoration: none
+
+            &--picture
+                text-transform: capitalize
+                font-family: 'Righteous', cursive
+                box-shadow: 1px 1px 20px $primary
+                text-align: center
+                vertical-align: middle
+                text-shadow: 1px 1px 5px $black
+                font-size: 2.3rem
+                color: $primary
+                $square: 2.3rem
+                width: $square
+                height: $square
+                background-color: $white
+                border-radius: 50%
+            &--picture:hover
+                transform: scale(1.1)
+        &-nav
+            width: 200px
+            height: 200px
+            display: none
+            position: absolute
+            top: 50px
+            // right:
+            background-color: $noir75
+
+            a
+                display: block
+
+// overlay effect when a search is started
+.curtain
+    background: rgba(0,0,0,0.4)
+    display: none
+    opacity: 0
+    position: fixed
+    top: $size-banner
+    right: 0
+    bottom: 0
+    left: 0
+    width: 100%
+    height: 100%
+    z-index: 9998
+    // transition: all 350ms
+    transition: all 200ms ease

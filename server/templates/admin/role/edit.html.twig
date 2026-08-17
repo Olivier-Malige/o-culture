@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier le rôle - {{ role.name }}{% endblock %}
+
+{% block body %}
+    <h1>Modifier le rôle - {{ role.name }}</h1>
+
+    {{ include('admin/role/_form.html.twig', {'button_label': 'Enregistrer'}) }}
+
+    <div class="d-flex mt-4">
+        <a href="{{ path('role_index') }}" class="btn btn-dark mr-1">Retour à la liste des rôles</a>
+        {{ include('admin/role/_delete_form.html.twig') }}
+    </div>
+{% endblock %}

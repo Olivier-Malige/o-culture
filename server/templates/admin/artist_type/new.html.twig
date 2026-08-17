@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un nouveau type d'artiste{% endblock %}
+
+{% block body %}
+    <h1>Créer un nouveau type d'artiste</h1>
+
+    {{ include('admin/artist_type/_form.html.twig') }}
+
+    <a href="{{ path('artist_type_index', {page: 1}) }}" class="btn btn-dark mr-1 mt-3">Retour à la liste des types d'artiste</a>
+{% endblock %}

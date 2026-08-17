@@ -1,0 +1,58 @@
+/**
+ * Import
+ */
+@import src/styles/vars
+/**
+ * Styles
+ */
+.slide-role
+  border-radius: 4px
+  transition: 0.3s
+  position: relative
+  filter: grayscale(1)
+  h3
+    position: absolute
+    color: $white
+    bottom: 10%
+    text-shadow: 1px 1px 15px $black
+    text-transform: capitalize
+    font-variant: small-caps
+    font-size: 2.5rem
+    transition: 0.6s
+    font-weight: 600
+  @media screen and (max-width: 1100px)
+    h3
+      font-size: 1.5rem
+  @media screen and (max-width: 760px)
+    h3
+      font-size: 3rem
+  @media screen and (max-width: 360px)
+    h3
+      font-size: 2rem
+
+  &:hover
+    cursor: pointer
+    box-shadow: 0 0 20px $primary
+    filter: none
+  &:hover h3
+    bottom: 70%
+.slider
+  h2
+    margin: 4rem 0
+    font-size: 2.5rem
+    font-weight: bold
+    text-align: center
+    font-variant: small-caps
+.Welcome
+    margin: 3rem
+    font-size: 3rem
+    text-align: center
+    text-transform: capitalize
+    text-shadow: 0 0 10px $primary
+.tiles-title
+    text-align: center
+    word-wrap: break-word
+    font-size: 2.5rem
+    line-height: 30px
+    margin: 20px 0
+    text-shadow: 0 0 10px $primary

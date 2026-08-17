@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Type d'artiste - {{ artist_type.name }}{% endblock %}
+
+{% block body %}
+    <h1>Type d'artiste - {{ artist_type.name }}</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Nom</th>
+                <td>{{ artist_type.name }}</td>
+            </tr>
+            <tr>
+                <th>Actif</th>
+                <td>{{ artist_type.isActive ? 'Oui' : 'Non' }}</td>
+            </tr>
+            <tr>
+                <th>Créé le</th>
+                <td>{{ artist_type.createdAt ? artist_type.createdAt|date('d-m-Y à H:i') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="d-flex mt-4">
+        <a href="{{ path('artist_type_index', {page: 1}) }}" class="btn btn-dark mr-1">Retour à la liste des utilisateurs</a>
+        <a href="{{ path('artist_type_edit', {'id': artist_type.id}) }}" class="btn btn-primary mr-1">Modifier</a>
+        {{ include('admin/artist_type/_delete_form.html.twig') }}
+    </div>
+
+{% endblock %}

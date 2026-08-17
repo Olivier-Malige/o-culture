@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier le tag - {{ tag.name }}{% endblock %}
+
+{% block body %}
+    <h1>Modifier le tag - {{ tag.name }} </h1>
+
+    {{ include('admin/tag/_form.html.twig', {'button_label': 'Enregistrer'}) }}
+
+    <a href="{{ path('tag_index', {page: 1}) }}" class="btn btn-dark mr-1">Retour à la liste des tags</a>
+
+    {{ include('admin/tag/_delete_form.html.twig') }}
+{% endblock %}

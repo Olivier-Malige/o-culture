@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des commentaires{% endblock %}
+
+{% block body %}
+    <h1>Liste des commentaires</h1>
+    {% for message in app.flashes('notice') %}
+    <div class="alert alert-dismissible alert-info">
+        {{ message }}
+    </div>
+    {% endfor %}
+    <a href="{{ path('comment_new') }}" class="btn btn-success mr-1 mb-3">Ajouter un nouveau commentaire</a>
+    <table class="table table-hover">
+        <thead>
+            <tr class="table-primary">
+                <th>Contenu</th>
+                <th>Posté le</th>
+                <th>Auteur</th>
+                <th>Actif</th>
+                <th>Nombre de likes</th>
+                <th>Nombre de signalement</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for comment in comments %}
+            <tr>
+                <td>{{ comment.content }}</td>
+                <td>{{ comment.createdAt ? comment.createdAt|date('d-m-Y à H:i') : '' }}</td>
+                <td>{{ comment.AppUser.name }}</td>
+                <td>{{ comment.isActive ? 'Oui' : 'Non' }}</td>
+                <td>{{ comment.nbLikes }}</td>
+                <td>{{ comment.nbAlert }}</td>
+                <td>
+                    <a href="{{ path('comment_show', {'id': comment.id}) }}" class="btn btn-dark mr-1">Détails</a>
+                    <a href="{{ path('comment_edit', {'id': comment.id}) }}" class="btn btn-primary mr-1">Modifier</a> 
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">Aucune donnée trouvée</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% if maxPages is defined and maxPages > 1 %}
+    <ul class="pagination">
+        <li {{ thisPage == 1 ? 'class="disabled"' }} class="page-item">
+            <a class="page-link" href="{{ path('comment_index', {page: thisPage-1 < 1 ? 1 : thisPage-1}) }}"><i class="fas fa-arrow-left"></i></a>
+        </li>
+        {% for i in 1..maxPages %}
+        <li {{ thisPage == i ? 'class="active"' }} class="page-item">
+            <a class="page-link" href="{{ path('comment_index', {page: i}) }}">{{ i }}</a>
+        </li>
+        {% endfor %}
+        <li {{ thisPage == maxPages ? 'class="disabled"' }} class="page-item">
+            <a class="page-link" href="{{ path('comment_index', {page: thisPage+1 <= maxPages ? thisPage+1 : thisPage}) }}"><i class="fas fa-arrow-right"></i></a>
+        </li>
+    </ul>
+    {% endif %}
+{% endblock %}
