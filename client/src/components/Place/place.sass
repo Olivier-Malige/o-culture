@@ -1,3 +1,5 @@
+@import src/styles/vars
+
 #place
     display: grid
     grid-template-columns: 1fr
@@ -31,6 +33,8 @@
         @media only screen and (min-width: 900px)
             position: sticky
             top: 70px
+            @media screen and (max-width: $demo-banner-max)
+                top: 70px + $demo-banner-height
 
         h1
             text-align: center
