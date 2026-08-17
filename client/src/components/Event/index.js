@@ -13,6 +13,7 @@ import { Link } from 'react-router-dom';
 import Comments from 'src/containers/Comments/Comments';
 import { formatDate, getHour } from 'src/utils/date';
 import { assetUrl } from 'src/utils/asset';
+import PlaceMap from 'src/components/Map';
 // Styles and assets
 import './event.sass';
 
@@ -125,7 +126,13 @@ class Event extends React.Component {
             <Comments pageId={currentEvent.id} comments={comments} pageType="Event" />
           </div>
           <div className="event-sidebar">
-            <div className="event-sidebar--map">Google Maps</div>
+            <div className="event-sidebar--map">
+              <PlaceMap
+                adress={place.adress}
+                city={place.city}
+                zipcode={place.zipcode}
+              />
+            </div>
             <div className="event-sidebar--follow">
               {userLogged
                 ? (

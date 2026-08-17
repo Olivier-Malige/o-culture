@@ -11,11 +11,12 @@ import { v4 as uuidv4 } from 'uuid';
 // Components
 import Card from 'src/components/Card';
 import Comments from 'src/containers/Comments/Comments';
+import Welcome from 'src/components/Templates/One';
 import { assetUrl } from 'src/utils/asset';
 
 // Styles and assets
 import './place.sass';
-import Welcome from 'src/components/Templates/One';
+import PlaceMap from 'src/components/Map';
 /**
  * Code
  */
@@ -68,11 +69,17 @@ class Place extends React.Component {
             <h1>{currentPlace.name}</h1>
             <p>{currentPlace.description}</p>
             <ul>
+              <li>{currentPlace.adress}</li>
               <li>{currentPlace.city}</li>
               <li>{currentPlace.zipcode}</li>
               <li>{currentPlace.email}</li>
               <li>{currentPlace.website}</li>
             </ul>
+            <PlaceMap
+              adress={currentPlace.adress}
+              city={currentPlace.city}
+              zipcode={currentPlace.zipcode}
+            />
           </div>
         </div>
       </div>
