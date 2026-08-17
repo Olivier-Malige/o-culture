@@ -5,7 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Tag;
 use App\Form\TagType;
 use App\Repository\TagRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use App\Controller\BaseController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -13,10 +13,10 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/admin/tag")
  */
-class TagController extends Controller
+class TagController extends BaseController
 {
     /**
-     * @Route("/", name="tag_index_all", methods="GET")
+     * @Route("/", name="tag_index_all", methods={"GET"})
      */
     public function index(TagRepository $tagRepository): Response
     {
@@ -24,7 +24,7 @@ class TagController extends Controller
     }
 
     /**
-     * @Route("/page/{page}", name="tag_index", methods="GET")
+     * @Route("/page/{page}", name="tag_index", methods={"GET"})
      * @param integer $page
      */
     public function indexAdmin($page)
@@ -41,7 +41,7 @@ class TagController extends Controller
     }
 
     /**
-     * @Route("/new", name="tag_new", methods="GET|POST")
+     * @Route("/new", name="tag_new", methods={"GET","POST"})
      */
     public function new(Request $request): Response
     {
@@ -69,7 +69,7 @@ class TagController extends Controller
     }
 
     /**
-     * @Route("/{id}", name="tag_show", methods="GET")
+     * @Route("/{id}", name="tag_show", methods={"GET"})
      */
     public function show(Tag $tag): Response
     {
@@ -77,7 +77,7 @@ class TagController extends Controller
     }
 
     /**
-     * @Route("/{id}/edit", name="tag_edit", methods="GET|POST")
+     * @Route("/{id}/edit", name="tag_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, Tag $tag): Response
     {
@@ -102,7 +102,7 @@ class TagController extends Controller
     }
 
     /**
-     * @Route("/{id}", name="tag_delete", methods="DELETE")
+     * @Route("/{id}", name="tag_delete", methods={"DELETE"})
      */
     public function delete(Request $request, Tag $tag): Response
     {

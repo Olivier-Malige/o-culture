@@ -9,23 +9,22 @@ use App\Entity\AppUser;
 use App\Repository\EventRepository;
 use App\Repository\PlaceRepository;
 use App\Repository\AppUserRepository;
-use JMS\Serializer\SerializerBuilder;
 use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use FOS\RestBundle\Controller\Annotations as FOSRest;
+use Symfony\Component\Routing\Annotation\Route;
+use App\Controller\BaseController;
 
-class SearchController extends FOSRestController
+class SearchController extends BaseController
 {
     /**
-     * @FOSRest\POST("/api/events/search")
+     * @Route("/api/events/search", methods={"POST"})
      */
 
     public function searchEventByName(Request $request)
     {
-        $serializer = SerializerBuilder::create()->build();
+        $serializer = $this->container->get('jms_serializer');
         $eventRepository = $this->getDoctrine()->getRepository(Event::class);
         $events = $eventRepository->findByName(trim(htmlspecialchars($request->get('search'))));              
                 
@@ -38,19 +37,19 @@ class SearchController extends FOSRestController
         
         else {       
             
-            $jsonContent = $serializer->serialize($events, 'json');            
+            $jsonContent = $serializer->serialize($events, 'json', SerializationContext::create()->setGroups(array('event_list')));
             $response = new Response($jsonContent, Response::HTTP_OK);
             return $response;
         }        
     }
 
     /**
-     * @FOSRest\GET("/api/search/events/{search}")
+     * @Route("/api/search/events/{search}", methods={"GET"})
      */
 
     public function searchEventName($search)
     {
-        $serializer = SerializerBuilder::create()->build();
+        $serializer = $this->container->get('jms_serializer');
         $eventRepository = $this->getDoctrine()->getRepository(Event::class);
         $events = $eventRepository->findByName(trim(htmlspecialchars($search)));              
 
@@ -63,19 +62,19 @@ class SearchController extends FOSRestController
         
         else {       
             
-            $jsonContent = $serializer->serialize($events, 'json');            
+            $jsonContent = $serializer->serialize($events, 'json', SerializationContext::create()->setGroups(array('event_list')));
             $response = new Response($jsonContent, Response::HTTP_OK);
             return $response;
         }        
     }
     
     /**
-     * @FOSRest\POST("/api/artists/search")
+     * @Route("/api/artists/search", methods={"POST"})
      */
 
     public function searchArtistByName(Request $request) 
     {
-        $serializer = SerializerBuilder::create()->build();
+        $serializer = $this->container->get('jms_serializer');
         $appUserRepository = $this->getDoctrine()->getRepository(AppUser::class);
         $artists = $appUserRepository->findByName(trim(htmlspecialchars($request->get('search'))));              
                 
@@ -88,19 +87,19 @@ class SearchController extends FOSRestController
         
         else {
             
-            $jsonContent = $serializer->serialize($artists, 'json');            
+            $jsonContent = $serializer->serialize($artists, 'json', SerializationContext::create()->setGroups(array('appuser_list', 'appuser_a_detail')));
             $response = new Response($jsonContent, Response::HTTP_OK);
             return $response;
         }  
     }
 
     /**
-     * @FOSRest\GET("/api/search/artists/{search}")
+     * @Route("/api/search/artists/{search}", methods={"GET"})
      */
 
     public function searchArtistName($search) 
     {
-        $serializer = SerializerBuilder::create()->build();
+        $serializer = $this->container->get('jms_serializer');
         $appUserRepository = $this->getDoctrine()->getRepository(AppUser::class);
         $artists = $appUserRepository->findByName(trim(htmlspecialchars($search)));              
                 
@@ -113,7 +112,7 @@ class SearchController extends FOSRestController
         
         else {
             
-            $jsonContent = $serializer->serialize($artists, 'json');            
+            $jsonContent = $serializer->serialize($artists, 'json', SerializationContext::create()->setGroups(array('appuser_list', 'appuser_a_detail')));
             $response = new Response($jsonContent, Response::HTTP_OK);
             return $response;
         }  
@@ -121,12 +120,12 @@ class SearchController extends FOSRestController
     }
 
     /**
-     * @FOSRest\POST("/api/places/search")
+     * @Route("/api/places/search", methods={"POST"})
      */
 
     public function searchPlaceByName(Request $request) 
     {
-        $serializer = SerializerBuilder::create()->build();
+        $serializer = $this->container->get('jms_serializer');
         $placeRepository = $this->getDoctrine()->getRepository(Place::class);
         $places = $placeRepository->findByName(trim(htmlspecialchars($request->get('search'))));              
                 
@@ -139,7 +138,7 @@ class SearchController extends FOSRestController
         
         else {
             
-            $jsonContent = $serializer->serialize($places, 'json');            
+            $jsonContent = $serializer->serialize($places, 'json', SerializationContext::create()->setGroups(array('place_list', 'place_detail')));
             $response = new Response($jsonContent, Response::HTTP_OK);
             return $response;
         }  
@@ -147,12 +146,12 @@ class SearchController extends FOSRestController
     }
 
     /**
-     * @FOSRest\GET("/api/search/places/{search}")
+     * @Route("/api/search/places/{search}", methods={"GET"})
      */
 
     public function searchPlaceName($search) 
     {
-        $serializer = SerializerBuilder::create()->build();
+        $serializer = $this->container->get('jms_serializer');
         $placeRepository = $this->getDoctrine()->getRepository(Place::class);
         $places = $placeRepository->findByName(trim(htmlspecialchars($search)));              
                 
@@ -165,7 +164,7 @@ class SearchController extends FOSRestController
         
         else {
             
-            $jsonContent = $serializer->serialize($places, 'json');            
+            $jsonContent = $serializer->serialize($places, 'json', SerializationContext::create()->setGroups(array('place_list', 'place_detail')));
             $response = new Response($jsonContent, Response::HTTP_OK);
             return $response;
         }  
@@ -174,14 +173,14 @@ class SearchController extends FOSRestController
 
     /**
      * List Events by Type.
-     * @FOSRest\Get("/api/type/{type}/events")
+     * @Route("/api/type/{type}/events", methods={"GET"})
      *
      * 
      */
     public function getEventsByType($type)
     {
         $repository = $this->getDoctrine()->getRepository(Event::class);
-        $serializer = SerializerBuilder::create()->build();
+        $serializer = $this->container->get('jms_serializer');
 
         $events = $repository->findByType(trim(htmlspecialchars($type)));
 
@@ -200,14 +199,14 @@ class SearchController extends FOSRestController
 
     /**
      * List Events by Date.
-     * @FOSRest\Get("/api/events/date/{date}")
+     * @Route("/api/events/date/{date}", methods={"GET"})
      *
      * 
      */
     public function getEventsByDate($date)
     {
         $repository = $this->getDoctrine()->getRepository(Event::class);
-        $serializer = SerializerBuilder::create()->build();
+        $serializer = $this->container->get('jms_serializer');
         
         $events = $repository->findByDate(trim(htmlspecialchars($date)));
 
@@ -226,14 +225,14 @@ class SearchController extends FOSRestController
 
     /**
      * List Events by City.
-     * @FOSRest\Get("/api/city/{city}/events")
+     * @Route("/api/city/{city}/events", methods={"GET"})
      *
      * 
      */
     public function getEventsByPlaceCity($city)
     {
         $repository = $this->getDoctrine()->getRepository(Event::class);
-        $serializer = SerializerBuilder::create()->build();
+        $serializer = $this->container->get('jms_serializer');
         
         $events = $repository->findByCity(trim(htmlspecialchars($city)));
         // dump($events);die;
@@ -253,14 +252,14 @@ class SearchController extends FOSRestController
 
     /**
      * List Events by Zipcode.
-     * @FOSRest\Get("/api/zipcode/{zipcode}/events")
+     * @Route("/api/zipcode/{zipcode}/events", methods={"GET"})
      *
      * 
      */
     public function getEventsByDepartment($zipcode)
     {
         $repository = $this->getDoctrine()->getRepository(Event::class);
-        $serializer = SerializerBuilder::create()->build();
+        $serializer = $this->container->get('jms_serializer');
         // dump($zipcode);
         $events = $repository->findByZipCode(trim(htmlspecialchars($zipcode)));
         // dump($events);die;
@@ -279,13 +278,13 @@ class SearchController extends FOSRestController
 
     /**
      * List Events by Artists.
-     * @FOSRest\Get("/api/artists/{artist}/events")
+     * @Route("/api/artists/{artist}/events", methods={"GET"})
      * 
      */
     public function getEventsByArtist($artist)
     {
         $repository = $this->getDoctrine()->getRepository(Event::class);
-        $serializer = SerializerBuilder::create()->build();
+        $serializer = $this->container->get('jms_serializer');
         // dump($artist);die;
         $events = $repository->findByArtist(trim(htmlspecialchars($artist)));
         // dump($events);die;

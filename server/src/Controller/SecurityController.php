@@ -3,36 +3,30 @@
 namespace App\Controller;
 
 use App\Entity\AppUser;
-use FOS\RestBundle\View\View;
 use App\Repository\RoleRepository;
 use App\Repository\AppUserRepository;
-use JMS\Serializer\SerializerBuilder;
 use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpFoundation\Request;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use FOS\RestBundle\Controller\Annotations as FOSRest;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-class SecurityController extends Controller
+class SecurityController extends BaseController
 {
 
     /**
      * Inscription.
-     * @FOSRest\Post("/api/registration")
+     * @Route("/api/registration", methods={"POST"})
      * 
      *
      * 
      */
-    public function registration(AppUserRepository $repository ,Request $request, RoleRepository $roleRepository, ObjectManager $em, UserPasswordEncoderInterface $encoder)
+    public function registration(AppUserRepository $repository ,Request $request, RoleRepository $roleRepository, ObjectManager $em, UserPasswordHasherInterface $encoder)
     {
-        $serializer = SerializerBuilder::create()->build();
+        $serializer = $this->container->get('jms_serializer');
         // je récupère l'username et l'email venant de la requete (données du formulaire)
         $username = trim(htmlspecialchars($request->get('username')));
         $email = trim(htmlspecialchars((strtolower($request->get('email')))));
@@ -100,9 +94,14 @@ class SecurityController extends Controller
                 $appUser->setStatus(1);
             }
     
-            $password = $request->get('password');
-            
-            $hash = $encoder->encodePassword($appUser, $password);
+            $password = (string) $request->get('password');
+            if (strlen($password) < 8) {
+                $jsonContent = $serializer->serialize(['status'=> false ,'error' => 4 , 'message'=> 'password too short'], 'json');
+                $response = new Response($jsonContent, Response::HTTP_OK);
+                return $response;
+            }
+
+            $hash = $encoder->hashPassword($appUser, $password);
             
     
             $appUser->setUsername($username);
@@ -126,14 +125,14 @@ class SecurityController extends Controller
 
     /**
      * Search email.
-     * @FOSRest\Post("/api/searchByEmail")
+     * @Route("/api/searchByEmail", methods={"POST"})
      * 
      *
      * 
      */
     public function searchByEmail(Request $request, AppUserRepository $repository)
     {
-        $serializer = SerializerBuilder::create()->build();
+        $serializer = $this->container->get('jms_serializer');
         $email = $repository->findByEmail(trim(htmlspecialchars(strtolower($request->get('email')))));
         if(empty($email)) {
 
@@ -149,14 +148,14 @@ class SecurityController extends Controller
     }
     /**
      * Search username.
-     * @FOSRest\Post("/api/searchByUsername")
+     * @Route("/api/searchByUsername", methods={"POST"})
      * 
      *
      * 
      */
     public function searchByUsername(Request $request, AppUserRepository $repository)
     {
-        $serializer = SerializerBuilder::create()->build();
+        $serializer = $this->container->get('jms_serializer');
         $username = $repository->findByUsername(trim(htmlspecialchars($request->get('username'))));
         if(empty($username)) {
             $jsonContent = $serializer->serialize(['status' => false, 'error' => 0, 'message' => 'username does not exist'], 'json');

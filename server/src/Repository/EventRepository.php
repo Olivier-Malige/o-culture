@@ -4,7 +4,7 @@ namespace App\Repository;
 
 use DateTime;
 use App\Entity\Event;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
@@ -16,7 +16,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
  */
 class EventRepository extends ServiceEntityRepository
 {
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Event::class);
     }

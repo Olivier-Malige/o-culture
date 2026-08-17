@@ -4,22 +4,20 @@ namespace App\Controller\Api;
 
 use App\Entity\Tag;
 use App\Repository\TagRepository;
-use FOS\RestBundle\View\View;
-use JMS\Serializer\SerializerBuilder;
 use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpFoundation\Request;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
-use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use FOS\RestBundle\Controller\Annotations as FOSRest;
+use Symfony\Component\Routing\Annotation\Route;
+use App\Controller\BaseController;
 
 
-class TagController extends FOSRestController
+class TagController extends BaseController
 {
     /**
      * Lists all Tags.
-     * @FOSRest\Get("/api/tags")
+     * @Route("/api/tags", methods={"GET"})
      */
 
     public function getTags()
@@ -27,7 +25,7 @@ class TagController extends FOSRestController
         $repository = $this->getDoctrine()->getRepository(Tag::class);
        
         $tags = $repository->findall();
-        $serializer = SerializerBuilder::create()->build();
+        $serializer = $this->container->get('jms_serializer');
         $jsonContent = $serializer->serialize($tags, 'json', SerializationContext::create()->setGroups(array('tag_list')));
         $response = new Response($jsonContent, Response::HTTP_OK);
 

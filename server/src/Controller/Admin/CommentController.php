@@ -10,15 +10,15 @@ use App\Repository\CommentRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use App\Controller\BaseController;
 
 /**
  * @Route("/admin/comment")
  */
-class CommentController extends Controller
+class CommentController extends BaseController
 {
     /**
-     * @Route("/", name="comment_index_all", methods="GET")
+     * @Route("/", name="comment_index_all", methods={"GET"})
      */
     public function index(CommentRepository $commentRepository): Response
     {
@@ -26,7 +26,7 @@ class CommentController extends Controller
     }
 
     /**
-    * @Route("/{page}", name="comment_index", methods="GET")
+    * @Route("/{page}", name="comment_index", methods={"GET"})
     */
     public function indexAdmin($page)
     {
@@ -41,7 +41,7 @@ class CommentController extends Controller
     }
 
     /**
-     * @Route("/new", name="comment_new", methods="GET|POST")
+     * @Route("/new", name="comment_new", methods={"GET","POST"})
      */
     public function new(Request $request): Response
     {
@@ -77,7 +77,7 @@ class CommentController extends Controller
     }
 
     /**
-     * @Route("/{id}", name="comment_show", methods="GET")
+     * @Route("/{id}", name="comment_show", methods={"GET"})
      */
     public function show(Comment $comment): Response
     {
@@ -85,7 +85,7 @@ class CommentController extends Controller
     }
 
     /**
-     * @Route("/{id}/edit", name="comment_edit", methods="GET|POST")
+     * @Route("/{id}/edit", name="comment_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, Comment $comment): Response
     {
@@ -108,7 +108,7 @@ class CommentController extends Controller
     }
 
     /**
-     * @Route("/{id}", name="comment_delete", methods="DELETE")
+     * @Route("/{id}", name="comment_delete", methods={"DELETE"})
      */
     public function delete(Request $request, Comment $comment): Response
     {

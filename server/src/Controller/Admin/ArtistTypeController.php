@@ -5,7 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\ArtistType;
 use App\Form\ArtistSortType;
 use App\Repository\ArtistTypeRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use App\Controller\BaseController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -13,10 +13,10 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/admin/artisttype")
  */
-class ArtistTypeController extends Controller
+class ArtistTypeController extends BaseController
 {
     /**
-     * @Route("/", name="artist_type_index_all", methods="GET")
+     * @Route("/", name="artist_type_index_all", methods={"GET"})
      */
     public function index(ArtistTypeRepository $artistTypeRepository): Response
     {
@@ -24,7 +24,7 @@ class ArtistTypeController extends Controller
     }
 
     /**
-     * @Route("/page/{page}", name="artist_type_index", methods="GET")
+     * @Route("/page/{page}", name="artist_type_index", methods={"GET"})
      * @param integer $page
      */
     public function indexAdmin($page)
@@ -40,7 +40,7 @@ class ArtistTypeController extends Controller
     }
 
     /**
-     * @Route("/new", name="artist_type_new", methods="GET|POST")
+     * @Route("/new", name="artist_type_new", methods={"GET","POST"})
      */
     public function new(Request $request): Response
     {
@@ -68,7 +68,7 @@ class ArtistTypeController extends Controller
     }
 
     /**
-     * @Route("/{id}", name="artist_type_show", methods="GET")
+     * @Route("/{id}", name="artist_type_show", methods={"GET"})
      */
     public function show(ArtistType $artistType): Response
     {
@@ -76,7 +76,7 @@ class ArtistTypeController extends Controller
     }
 
     /**
-     * @Route("/{id}/edit", name="artist_type_edit", methods="GET|POST")
+     * @Route("/{id}/edit", name="artist_type_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, ArtistType $artistType): Response
     {
@@ -101,7 +101,7 @@ class ArtistTypeController extends Controller
     }
 
     /**
-     * @Route("/{id}", name="artist_type_delete", methods="DELETE")
+     * @Route("/{id}", name="artist_type_delete", methods={"DELETE"})
      */
     public function delete(Request $request, ArtistType $artistType): Response
     {

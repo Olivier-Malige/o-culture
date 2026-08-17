@@ -1,7 +1,7 @@
 /**
  * Import
  */
-import uuidv4 from 'uuid/v4';
+import { v4 as uuidv4 } from 'uuid';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';

@@ -7,5 +7,10 @@ export const assetUrl = (path) => {
     return '/src/assets/EventDefault.jpg';
   }
 
-  return `/src/assets/${String(path).replace(/^\/+/, '')}`;
+  const relative = String(path).replace(/\\/g, '/').replace(/^\/+/, '');
+  if (relative.includes('..') || /[:?#]/.test(relative)) {
+    return '/src/assets/EventDefault.jpg';
+  }
+
+  return `/src/assets/${relative}`;
 };

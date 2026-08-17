@@ -1,112 +1,61 @@
 security:
-    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
-    encoders:
+    password_hashers:
         App\Entity\AppUser:
-            algorithm: bcrypt
+            algorithm: auto
 
     providers:
         entity_provider:
             entity:
                 class: App\Entity\AppUser
                 property: email
+
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         login:
-            pattern:  ^/api/login_check
+            pattern: ^/api/login_check
             stateless: true
-            anonymous: true
             json_login:
                 check_path: /api/login_check
-                username_path:  email
-                password_path:  password
+                username_path: email
+                password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
-              
-        register:
-            pattern:  ^/api/registration
+        api:
+            pattern: ^/api
             stateless: true
-            anonymous: true
-
-        profile:
-            pattern:  "^/api/(me$|appusers/.+$)"
-            stateless: true
-            anonymous: false
+            jwt: ~
+        admin:
+            lazy: true
             provider: entity_provider
-            guard:
-                authenticators:
-                    - lexik_jwt_authentication.jwt_token_authenticator
-           
-        
-        event_create:
-            pattern: ^/api/events/create$
-            stateless: true
-            anonymous: false
-            provider: entity_provider
-            guard:
-                authenticators:
-                    - lexik_jwt_authentication.jwt_token_authenticator
-    
-
-        event_update:
-            pattern: ^/api/events/.+/(update|delete|participate|comments)
-            stateless: true
-            anonymous: false
-            provider: entity_provider
-            guard:
-                authenticators:
-                    - lexik_jwt_authentication.jwt_token_authenticator
-                    
-        place:
-            pattern: ^/api/places/create$
-            stateless: true
-            anonymous: false
-            provider: entity_provider
-            guard:
-                authenticators:
-                    - lexik_jwt_authentication.jwt_token_authenticator
-           
-        place_update:
-            pattern: ^/api/places/.+/(update|comments|delete)
-            stateless: true
-            anonymous: false
-            provider: entity_provider
-            guard:
-                authenticators:
-                    - lexik_jwt_authentication.jwt_token_authenticator
-           
-        admin: 
-            anonymous: true
-            provider:  entity_provider
             form_login:
-                default_target_path: /chat/messages/           
+                default_target_path: /chat/messages/
                 login_path: /admin/login
                 check_path: /admin/login
+                enable_csrf: true
             logout:
-                # url logout
-                path:   admin_logout
-                # url de redirection apres logout
-                target: /admin/login  
-    # Easy way to control access for large sections of your site
-    # Note: Only the *first* access control that matches will be used
+                path: admin_logout
+                target: /admin/login
+
     role_hierarchy:
         ROLE_ADMINISTRATOR: ROLE_MODERATOR
-        ROLE_MODERATOR: ROLE_ORGANIZER , ROLE_ARTIST
+        ROLE_MODERATOR: [ROLE_ORGANIZER, ROLE_ARTIST]
         ROLE_ORGANIZER: ROLE_SPECTATOR
         ROLE_ARTIST: ROLE_SPECTATOR
+
     access_control:
-        - { path: ^/api/registration, roles: IS_AUTHENTICATED_ANONYMOUSLY , methods: [POST] }
-        - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/login, roles: PUBLIC_ACCESS }
+        - { path: ^/api/registration, roles: PUBLIC_ACCESS, methods: [POST] }
+        - { path: ^/api/searchByEmail, roles: PUBLIC_ACCESS }
+        - { path: ^/api/searchByUsername, roles: PUBLIC_ACCESS }
         - { path: ^/api/me$, roles: IS_AUTHENTICATED_FULLY }
-        - { path: ^/api/appusers/.+$, roles: IS_AUTHENTICATED_FULLY, methods: [GET,PUT] }
-
-        - { path: ^/api/places/create$, roles: IS_AUTHENTICATED_FULLY  }
-        - { path: ^/api/places/.+/(update|comments|delete),  methods: [PUT,POST,GET] , roles: IS_AUTHENTICATED_FULLY }
-        - { path: ^/chat/messages/, roles: [ROLE_ORGANIZER, ROLE_ARTIST] }
-        - { path: ^/admin/.+/, roles: ROLE_ADMINISTRATOR }
-
-        - { path: ^/api/events/create$, roles: IS_AUTHENTICATED_FULLY  }
-        - { path: ^/api/events/.+/(update|delete|participate|comments),  methods: [PUT,POST,GET] , roles: IS_AUTHENTICATED_FULLY }
-
-        
+        - { path: ^/api/appusers, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/events/create, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/events/.+/(update|delete|participate|comments), roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/places/create, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/places/.+/(update|comments|delete), roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api, roles: PUBLIC_ACCESS }
+        - { path: ^/admin/login, roles: PUBLIC_ACCESS }
+        - { path: ^/chat/messages, roles: [ROLE_ORGANIZER, ROLE_ARTIST, ROLE_ADMINISTRATOR] }
+        - { path: ^/admin, roles: ROLE_ADMINISTRATOR }

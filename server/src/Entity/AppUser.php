@@ -6,15 +6,17 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Groups;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use JMS\Serializer\Annotation\Exclude;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\AppUserRepository")
  * @UniqueEntity(fields="username", message="ce username existe déjà")
  * @UniqueEntity(fields="email", message="Cette adresse email existe déjà")
  */
-class AppUser implements UserInterface
+class AppUser implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
      * @ORM\Id()
@@ -38,6 +40,7 @@ class AppUser implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=89)
+     * @Exclude
      */
     private $password;
 
@@ -164,7 +167,8 @@ class AppUser implements UserInterface
         $this->events = new ArrayCollection();
         $this->places = new ArrayCollection();
         $this->comments = new ArrayCollection();
-        $this->messages = new ArrayCollection();
+        $this->messagesSend = new ArrayCollection();
+        $this->messagesReceived = new ArrayCollection();
         $this->EventsPro = new ArrayCollection();
         $this->EventsParticipant = new ArrayCollection();
         $this->AppUserArtistType = new ArrayCollection();
@@ -176,8 +180,16 @@ class AppUser implements UserInterface
     {
         return null;
     }
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
+    }
+
+    /**
+     * Login identifier: the firewall looks up users by email.
+     */
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
     }
     //////////////////////////////////////
     public function getId()
@@ -403,7 +415,7 @@ class AppUser implements UserInterface
         return $this;
     }
 
-    public function getRoles()
+    public function getRoles(): array
     {
        $role = $this->getRole();
 

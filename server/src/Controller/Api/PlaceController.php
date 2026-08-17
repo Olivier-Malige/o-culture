@@ -6,25 +6,23 @@ use App\Entity\Event;
 use App\Entity\Place;
 use App\Entity\AppUser;
 use App\Entity\PlaceType;
-use FOS\RestBundle\View\View;
 use App\Repository\PlaceRepository;
 use App\Repository\PlaceTypeRepository;
-use JMS\Serializer\SerializerBuilder;
 use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpFoundation\Request;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
-use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use FOS\RestBundle\Controller\Annotations as FOSRest;
 use App\Entity\Comment;
+use Symfony\Component\Routing\Annotation\Route;
+use App\Controller\BaseController;
 
 
-class PlaceController extends FOSRestController
+class PlaceController extends BaseController
 {
     /**
      * Lists all Places.
-     * @FOSRest\Get("/api/places")
+     * @Route("/api/places", methods={"GET"})
      */
 
     public function getPlaces()
@@ -32,7 +30,7 @@ class PlaceController extends FOSRestController
         $repository = $this->getDoctrine()->getRepository(Place::class);
     
         $places = $repository->findall();
-        $serializer = SerializerBuilder::create()->build();
+        $serializer = $this->container->get('jms_serializer');
         $jsonContent = $serializer->serialize($places, 'json', SerializationContext::create()->setGroups(array('place_list', 'place_detail')));
         $response = new Response($jsonContent, Response::HTTP_OK);
 
@@ -45,13 +43,13 @@ class PlaceController extends FOSRestController
     
    /**
      * One Place.
-     * @FOSRest\Get("/api/places/{id}")
+     * @Route("/api/places/{id}", methods={"GET"})
      *
      * 
      */
     public function getPlace(Request $request, Place $place) 
     {
-        $serializer = SerializerBuilder::create()->build();
+        $serializer = $this->container->get('jms_serializer');
         $jsonContent = $serializer->serialize($place, 'json', SerializationContext::create()->setGroups(array('place_detail', 'place_list')));
         $response = new Response($jsonContent, Response::HTTP_OK);
 
@@ -65,7 +63,7 @@ class PlaceController extends FOSRestController
 
    /**
      * CReate One Place.
-     * @FOSRest\Post("/api/places/create")
+     * @Route("/api/places/create", methods={"POST"})
      *
      * 
      */
@@ -128,7 +126,7 @@ class PlaceController extends FOSRestController
 
 
     /**
-    * @FOSRest\Put("/api/places/{id}/update")
+    * @Route("/api/places/{id}/update", methods={"PUT"})
     */
     public function updatePlace(Request $request, Place $place)
     {
@@ -230,7 +228,7 @@ class PlaceController extends FOSRestController
     }
 
     /**
-    * @FOSRest\Post("/api/places/{id}/comments")
+    * @Route("/api/places/{id}/comments", methods={"POST"})
     */
     public function postCommentPlace(Request $request, Place $place)
     {
@@ -265,7 +263,7 @@ class PlaceController extends FOSRestController
   
     /**
      * Delete un lieu.
-     * @FOSRest\Delete("/api/places/{id}/delete")
+     * @Route("/api/places/{id}/delete", methods={"DELETE"})
      *
      * 
      */

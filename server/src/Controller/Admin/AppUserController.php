@@ -8,19 +8,19 @@ use App\Repository\AppUserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use App\Controller\BaseController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * @Route("/admin/appuser")
  */
-class AppUserController extends Controller
+class AppUserController extends BaseController
 {
     /**
-     * @Route("/", name="app_user_index_all", methods="GET")
+     * @Route("/", name="app_user_index_all", methods={"GET"})
      */
     public function index(AppUserRepository $appUserRepository): Response
     {
@@ -28,7 +28,7 @@ class AppUserController extends Controller
     }
 
     /**
-     * @Route("/page/{page}", name="app_user_index", methods="GET")
+     * @Route("/page/{page}", name="app_user_index", methods={"GET"})
      * @param integer $page
      */
      public function indexAdmin($page)
@@ -45,7 +45,7 @@ class AppUserController extends Controller
     }
         
     /**
-    * @Route("/spectators/{page}", name="app_user_index_appusers", methods="GET")
+    * @Route("/spectators/{page}", name="app_user_index_appusers", methods={"GET"})
     * @param integer $page
     */
     public function indexAdminAppUser($page)
@@ -62,7 +62,7 @@ class AppUserController extends Controller
     }
 
     /**
-    * @Route("/artists/{page}", name="app_user_index_artists", methods="GET")
+    * @Route("/artists/{page}", name="app_user_index_artists", methods={"GET"})
     * @param integer $page
     */
     public function indexAdminArtists($page)
@@ -79,7 +79,7 @@ class AppUserController extends Controller
     }
 
     /**
-    * @Route("/organizers/{page}", name="app_user_index_organizers", methods="GET")
+    * @Route("/organizers/{page}", name="app_user_index_organizers", methods={"GET"})
     * @param integer $page
     */
     public function indexAdminOrganizers($page)
@@ -96,7 +96,7 @@ class AppUserController extends Controller
     }
 
     /**
-     * @Route("/spectators/all", name="app_user_index_spectators_all", methods="GET")
+     * @Route("/spectators/all", name="app_user_index_spectators_all", methods={"GET"})
      */
     public function indexSpectators(AppUserRepository $appUserRepository): Response
     {
@@ -105,7 +105,7 @@ class AppUserController extends Controller
     }
 
     /**
-     * @Route("/artists/all", name="app_user_index_artist_all", methods="GET")
+     * @Route("/artists/all", name="app_user_index_artist_all", methods={"GET"})
      */
     public function indexArtist(AppUserRepository $appUserRepository): Response
     {
@@ -114,7 +114,7 @@ class AppUserController extends Controller
     }
 
     /**
-     * @Route("/organizers/all", name="app_user_index_organizer_all", methods="GET")
+     * @Route("/organizers/all", name="app_user_index_organizer_all", methods={"GET"})
      */
     public function indexOrganizer(AppUserRepository $appUserRepository): Response
     {
@@ -123,9 +123,9 @@ class AppUserController extends Controller
     }
 
     /**
-     * @Route("/new", name="app_user_new", methods="GET|POST")
+     * @Route("/new", name="app_user_new", methods={"GET","POST"})
      */
-    public function new(Request $request, UserPasswordEncoderInterface $encoder): Response
+    public function new(Request $request, UserPasswordHasherInterface $encoder): Response
     {
         $appUser = new AppUser();
         $form = $this->createForm(AppUserType::class, $appUser);
@@ -135,7 +135,7 @@ class AppUserController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $password = $appUser->getPassword();
-            $hash = $encoder->encodePassword($appUser, $password);
+            $hash = $encoder->hashPassword($appUser, $password);
                     
             $appUser->setPassword($hash);
 
@@ -157,7 +157,7 @@ class AppUserController extends Controller
     }
 
     /**
-     * @Route("/{id}", name="app_user_show", methods="GET")
+     * @Route("/{id}", name="app_user_show", methods={"GET"})
      */
     public function show(AppUser $appUser): Response
     {
@@ -165,7 +165,7 @@ class AppUserController extends Controller
     }
 
     /**
-     * @Route("/{id}/edit", name="app_user_edit", methods="GET|POST")
+     * @Route("/{id}/edit", name="app_user_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, AppUser $appUser): Response
     {
@@ -190,7 +190,7 @@ class AppUserController extends Controller
     }
 
     /**
-     * @Route("/{id}", name="app_user_delete", methods="DELETE")
+     * @Route("/{id}", name="app_user_delete", methods={"DELETE"})
      */
     public function delete(AuthorizationCheckerInterface $authChecker,Request $request, AppUser $appUser) : Response 
     {

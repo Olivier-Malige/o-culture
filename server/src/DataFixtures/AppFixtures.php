@@ -25,14 +25,14 @@ use App\DataFixtures\Faker\ArtistTypeProvider;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
 
-use Doctrine\Common\Persistence\ObjectManager;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture {
 
     private $encoder;
 
-    public function __construct(UserPasswordEncoderInterface $encoder){
+    public function __construct(UserPasswordHasherInterface $encoder){
         $this->encoder = $encoder;
     }
 
@@ -77,6 +77,11 @@ class AppFixtures extends Fixture {
         $userOrganizer = $this->createDemoUser('organizer', 'organizer@example.com', 'oculture', $roleOrganizer);
         $userOrganizer->setName('Organizer Test');
         $manager->persist($userOrganizer);
+
+        if (!class_exists(\Faker\ORM\Doctrine\Populator::class)) {
+            $manager->flush();
+            return;
+        }
 
         $generator->addProvider(new ArtistProvider($generator));
         $generator->addProvider(new ArtistTypeProvider($generator));
@@ -148,7 +153,7 @@ class AppFixtures extends Fixture {
         $user = new AppUser();
         $user->setUsername($username);
         $user->setEmail($email);
-        $user->setPassword($this->encoder->encodePassword($user, $plainPassword));
+        $user->setPassword($this->encoder->hashPassword($user, $plainPassword));
         $user->setRole($role);
         $user->setCity('Paris');
         $user->setZipcode(75000);

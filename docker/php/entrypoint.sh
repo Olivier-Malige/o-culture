@@ -6,7 +6,7 @@ mkdir -p "$JWT_DIR"
 
 if [ ! -f "$JWT_DIR/private.pem" ] || [ ! -f "$JWT_DIR/public.pem" ]; then
   echo "Generating JWT key pair"
-  openssl genrsa -out "$JWT_DIR/private.pem" -aes256 -passout pass:"$JWT_PASSPHRASE" 2048
+  openssl genrsa -out "$JWT_DIR/private.pem" -aes256 -passout pass:"$JWT_PASSPHRASE" 4096
   openssl rsa -pubout -in "$JWT_DIR/private.pem" -out "$JWT_DIR/public.pem" -passin pass:"$JWT_PASSPHRASE"
 fi
 

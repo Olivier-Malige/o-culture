@@ -8,23 +8,21 @@ use App\Entity\Place;
 use App\Entity\AppUser;
 use App\Entity\Comment;
 use App\Entity\EventType;
-use FOS\RestBundle\View\View;
-use JMS\Serializer\SerializerBuilder;
 use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use FOS\RestBundle\Controller\Annotations as FOSRest;
+use Symfony\Component\Routing\Annotation\Route;
+use App\Controller\BaseController;
 
 
-class EventController extends FOSRestController
+class EventController extends BaseController
 {
 
 
     /**
      * Lists all Events.
-     * @FOSREst\Get("/api/events")
+     * @Route("/api/events", methods={"GET"})
      * 
      *
      * 
@@ -34,7 +32,7 @@ class EventController extends FOSRestController
         $repository = $this->getDoctrine()->getRepository(Event::class);
     
         $events = $repository->findEventsByCurrentDate();
-        $serializer = SerializerBuilder::create()->build();
+        $serializer = $this->container->get('jms_serializer');
         $jsonContent = $serializer->serialize($events, 'json', SerializationContext::create()->setGroups(array('event_list')));
         $response = new Response($jsonContent, Response::HTTP_OK);
 
@@ -44,13 +42,13 @@ class EventController extends FOSRestController
     
     /**
      * One Events.
-     * @FOSRest\Get("/api/events/{id}")
+     * @Route("/api/events/{id}", methods={"GET"})
      *
      * 
      */
     public function getEvent(Request $request, Event $event)
     {
-        $serializer = SerializerBuilder::create()->build();
+        $serializer = $this->container->get('jms_serializer');
         $jsonContent = $serializer->serialize($event, 'json', SerializationContext::create()->setGroups(array('event_list', 'event_detail')));
         $response = new Response($jsonContent, Response::HTTP_OK);
 
@@ -59,7 +57,7 @@ class EventController extends FOSRestController
 
     /**
      * One Events.
-     * @FOSRest\Post("/api/events/{id}/participate")
+     * @Route("/api/events/{id}/participate", methods={"POST"})
      *
      * 
      */
@@ -80,7 +78,7 @@ class EventController extends FOSRestController
 
     /**
      * Create Event.
-     * @FOSRest\Post("/api/events/create")
+     * @Route("/api/events/create", methods={"POST"})
      *
      * 
      */
@@ -143,7 +141,9 @@ class EventController extends FOSRestController
             // $event->setImage('EventDefault.jpg');
 
             $event->setAppUserCreator($user);
-            $event->addAppUserPerformer($artist[0]);
+            if (!empty($artist)) {
+                $event->addAppUserPerformer($artist[0]);
+            }
             $event->setEventPlace($place[0]);
          
 
@@ -167,7 +167,7 @@ class EventController extends FOSRestController
 
 
     /**
-     * @FOSRest\Put("/api/events/{id}/update")
+     * @Route("/api/events/{id}/update", methods={"PUT"})
      */
     public function updateEvent(Request $request, Event $event)
     {
@@ -205,7 +205,7 @@ class EventController extends FOSRestController
             }
 
             if (empty($request->get('image'))) {
-                $image = $place->getImage();
+                $image = $event->getImage();
             } else {
                 $image = trim(htmlspecialchars(($request->get('image'))));
             }
@@ -248,7 +248,7 @@ class EventController extends FOSRestController
 
     /**
      * Delete un Event.
-     * @FOSREst\Delete("/api/events/{id}/delete")
+     * @Route("/api/events/{id}/delete", methods={"DELETE"})
      *
      * 
      */
@@ -272,7 +272,7 @@ class EventController extends FOSRestController
     }
 
     /**
-     * @FOSRest\Post("/api/events/{id}/comments")
+     * @Route("/api/events/{id}/comments", methods={"POST"})
      */
     public function postCommentEvent(Request $request, Event $event)
     {

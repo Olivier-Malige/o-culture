@@ -4,24 +4,22 @@ namespace App\Controller\Api;
 
 use App\Entity\AppUser;
 use App\Form\AppUserType;
-use FOS\RestBundle\View\View;
-use JMS\Serializer\SerializerBuilder;
 use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use FOS\RestBundle\Controller\Annotations as FOSRest;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Routing\Annotation\Route;
+use App\Controller\BaseController;
 
 
 
 
-class AppUserController extends FOSRestController
+class AppUserController extends BaseController
 {
     /**
      * Lists all AppUsers.
-     * @FOSRest\Get("/api/appusers")
+     * @Route("/api/appusers", methods={"GET"})
      * 
      *
      * 
@@ -29,23 +27,20 @@ class AppUserController extends FOSRestController
     public function getAppUsers()
     {
 
-        if ($this->getUser()->getRole()->getCode() === 'ROLE_ADMIN') {
-
-            $repository = $this->getDoctrine()->getRepository(AppUser::class);
-
-
-            $users = $repository->findall();
-            $serializer = SerializerBuilder::create()->build();
-            $jsonContent = $serializer->serialize($users, 'json', SerializationContext::create()->setGroups(array('appuser_list')));
-            return new Response($jsonContent, Response::HTTP_OK);
-        } else {
-            return new JsonResponse(['message' => "Vous n'avez pas accès a cette page"], 401);
+        if (!$this->isGranted('ROLE_ADMINISTRATOR')) {
+            return new JsonResponse(['message' => "Vous n'avez pas accès a cette page"], 403);
         }
+
+        $repository = $this->getDoctrine()->getRepository(AppUser::class);
+        $users = $repository->findall();
+        $serializer = $this->container->get('jms_serializer');
+        $jsonContent = $serializer->serialize($users, 'json', SerializationContext::create()->setGroups(array('appuser_list')));
+        return new Response($jsonContent, Response::HTTP_OK);
     }
 
     /**
      * Lists all Artiste.
-     * @FOSRest\Get("/api/artists")
+     * @Route("/api/artists", methods={"GET"})
      * 
      *
      * 
@@ -56,13 +51,13 @@ class AppUserController extends FOSRestController
 
 
         $artists = $repository->findByStatus(2);
-        $serializer = SerializerBuilder::create()->build();
+        $serializer = $this->container->get('jms_serializer');
         $jsonContent = $serializer->serialize($artists, 'json', SerializationContext::create()->setGroups(array('appuser_a_detail')));
         return new Response($jsonContent, Response::HTTP_OK);
     }
     /**
      * One AppUser.
-     * @FOSRest\Get("/api/appusers/{username}")
+     * @Route("/api/appusers/{username}", methods={"GET"})
      *
      * 
      */
@@ -84,7 +79,7 @@ class AppUserController extends FOSRestController
 
     /**
      * Current authenticated user profile, including event registrations.
-     * @FOSRest\Get("/api/me")
+     * @Route("/api/me", methods={"GET"})
      */
     public function getMe()
     {
@@ -115,7 +110,7 @@ class AppUserController extends FOSRestController
             $groups[] = 'appuser_a_detail';
         }
 
-        $serializer = SerializerBuilder::create()->build();
+        $serializer = $this->container->get('jms_serializer');
         $jsonContent = $serializer->serialize($appUser, 'json', SerializationContext::create()->setGroups($groups));
         $response = new Response($jsonContent, Response::HTTP_OK);
         $response->headers->set('Content-Type', 'application/json');
@@ -125,14 +120,14 @@ class AppUserController extends FOSRestController
 
        
     /**
-    * @FOSRest\Put("/api/appusers/{username}")
+    * @Route("/api/appusers/{username}", methods={"PUT"})
     */
-    public function updateAppUser(Request $request, AppUser $appUser, UserPasswordEncoderInterface $encoder)
+    public function updateAppUser(Request $request, AppUser $appUser, UserPasswordHasherInterface $encoder)
     {
-      
         $user = $this->getUser();
-
-       
+        if (!$user instanceof AppUser || $user->getId() !== $appUser->getId()) {
+            return new JsonResponse(['message' => 'Non autorisé'], Response::HTTP_FORBIDDEN);
+        }
 
         if (empty($request->get('facebook'))) {
             $facebook = $user->getFacebook();
@@ -167,7 +162,11 @@ class AppUserController extends FOSRestController
         if(empty($request->get('password'))) {
             $password = $user->getPassword();
         } else {
-            $password = $encoder->encodePassword($appUser, $request->get('password'));;
+            $plainPassword = (string) $request->get('password');
+            if (strlen($plainPassword) < 8) {
+                return new JsonResponse(['message' => 'Mot de passe trop court'], Response::HTTP_BAD_REQUEST);
+            }
+            $password = $encoder->hashPassword($appUser, $plainPassword);
         }
 
         if(empty($request->get('city'))) {

@@ -50,6 +50,9 @@ class JWTCreatedListener
     public function onJWTCreated(JWTCreatedEvent $event)
     {
         $user = $event->getUser();
+        if (!$user instanceof \App\Entity\AppUser) {
+            return;
+        }
         $expiration = new \DateTime('+1 day');
         $expiration->setTime(2, 0, 0);
 

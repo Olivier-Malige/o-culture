@@ -10,15 +10,15 @@ use App\Repository\PlaceRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use App\Controller\BaseController;
 
 /**
  * @Route("/admin/place")
  */
-class PlaceController extends Controller
+class PlaceController extends BaseController
 {
     /**
-     * @Route("/", name="place_index_all", methods="GET")
+     * @Route("/", name="place_index_all", methods={"GET"})
      */
     public function index(PlaceRepository $placeRepository): Response
     {
@@ -26,7 +26,7 @@ class PlaceController extends Controller
     }
 
     /**
-     * @Route("/page/{page}", name="place_index", methods="GET")
+     * @Route("/page/{page}", name="place_index", methods={"GET"})
      * @param integer $page
      */
     public function indexAdmin($page)
@@ -43,7 +43,7 @@ class PlaceController extends Controller
     }
 
     /**
-     * @Route("/new", name="place_new", methods="GET|POST")
+     * @Route("/new", name="place_new", methods={"GET","POST"})
      */
     public function new(Request $request): Response
     {
@@ -80,7 +80,7 @@ class PlaceController extends Controller
     }
 
     /**
-     * @Route("/{id}", name="place_show", methods="GET")
+     * @Route("/{id}", name="place_show", methods={"GET"})
      */
     public function show(Place $place): Response
     {
@@ -88,7 +88,7 @@ class PlaceController extends Controller
     }
 
     /**
-     * @Route("/{id}/edit", name="place_edit", methods="GET|POST")
+     * @Route("/{id}/edit", name="place_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, Place $place): Response
     {
@@ -113,7 +113,7 @@ class PlaceController extends Controller
     }
 
     /**
-     * @Route("/{id}", name="place_delete", methods="DELETE")
+     * @Route("/{id}", name="place_delete", methods={"DELETE"})
      */
     public function delete(Request $request, Place $place): Response
     {

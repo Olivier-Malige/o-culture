@@ -3,7 +3,7 @@ const path = require('path');
 const webpack = require('webpack');
 
 // Plugins de traitement pour dist/
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const HtmlWebPackPlugin = require('html-webpack-plugin');
@@ -52,10 +52,10 @@ module.exports = {
     },
     // Minification
     minimizer: [
-      new UglifyJsPlugin({
+      new TerserPlugin({
         cache: true,
         parallel: true,
-        sourceMap: false // passer à true pour JS source maps
+        sourceMap: false
       }),
       new OptimizeCSSAssetsPlugin({})
     ]
@@ -93,8 +93,12 @@ module.exports = {
               sourceMap: true,
             },
           },
-          // SASS
-          'sass-loader',
+          {
+            loader: 'sass-loader',
+            options: {
+              implementation: require('sass'),
+            },
+          },
         ],
       },
       // Inages

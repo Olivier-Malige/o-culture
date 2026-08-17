@@ -5,7 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\EventType;
 use App\Form\EventSortType;
 use App\Repository\EventTypeRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use App\Controller\BaseController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -13,10 +13,10 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/admin/eventtype")
  */
-class EventTypeController extends Controller
+class EventTypeController extends BaseController
 {
     /**
-     * @Route("/", name="event_type_index_all", methods="GET")
+     * @Route("/", name="event_type_index_all", methods={"GET"})
      */
     public function index(EventTypeRepository $eventTypeRepository): Response
     {
@@ -24,7 +24,7 @@ class EventTypeController extends Controller
     }
 
     /**
-     * @Route("/page/{page}", name="event_type_index", methods="GET")
+     * @Route("/page/{page}", name="event_type_index", methods={"GET"})
      * @param integer $page
      */
     public function indexAdmin($page)
@@ -41,7 +41,7 @@ class EventTypeController extends Controller
     }
 
     /**
-     * @Route("/new", name="event_type_new", methods="GET|POST")
+     * @Route("/new", name="event_type_new", methods={"GET","POST"})
      */
     public function new(Request $request): Response
     {
@@ -69,7 +69,7 @@ class EventTypeController extends Controller
     }
 
     /**
-     * @Route("/{id}", name="event_type_show", methods="GET")
+     * @Route("/{id}", name="event_type_show", methods={"GET"})
      */
     public function show(EventType $eventType): Response
     {
@@ -77,7 +77,7 @@ class EventTypeController extends Controller
     }
 
     /**
-     * @Route("/{id}/edit", name="event_type_edit", methods="GET|POST")
+     * @Route("/{id}/edit", name="event_type_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, EventType $eventType): Response
     {
@@ -102,7 +102,7 @@ class EventTypeController extends Controller
     }
 
     /**
-     * @Route("/{id}", name="event_type_delete", methods="DELETE")
+     * @Route("/{id}", name="event_type_delete", methods={"DELETE"})
      */
     public function delete(Request $request, EventType $eventType): Response
     {

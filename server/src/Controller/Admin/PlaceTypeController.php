@@ -5,7 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\PlaceType;
 use App\Form\PlaceSortType;
 use App\Repository\PlaceTypeRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use App\Controller\BaseController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -13,10 +13,10 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/admin/place/type")
  */
-class PlaceTypeController extends Controller
+class PlaceTypeController extends BaseController
 {
     /**
-     * @Route("/", name="place_type_index_all", methods="GET")
+     * @Route("/", name="place_type_index_all", methods={"GET"})
      */
     public function index(PlaceTypeRepository $placeTypeRepository): Response
     {
@@ -24,7 +24,7 @@ class PlaceTypeController extends Controller
     }
 
     /**
-     * @Route("/page/{page}", name="place_type_index", methods="GET")
+     * @Route("/page/{page}", name="place_type_index", methods={"GET"})
      * @param integer $page
      */
     public function indexAdmin($page)
@@ -41,7 +41,7 @@ class PlaceTypeController extends Controller
     }
 
     /**
-     * @Route("/new", name="place_type_new", methods="GET|POST")
+     * @Route("/new", name="place_type_new", methods={"GET","POST"})
      */
     public function new(Request $request): Response
     {
@@ -69,7 +69,7 @@ class PlaceTypeController extends Controller
     }
 
     /**
-     * @Route("/{id}", name="place_type_show", methods="GET")
+     * @Route("/{id}", name="place_type_show", methods={"GET"})
      */
     public function show(PlaceType $placeType): Response
     {
@@ -77,7 +77,7 @@ class PlaceTypeController extends Controller
     }
 
     /**
-     * @Route("/{id}/edit", name="place_type_edit", methods="GET|POST")
+     * @Route("/{id}/edit", name="place_type_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, PlaceType $placeType): Response
     {
@@ -102,7 +102,7 @@ class PlaceTypeController extends Controller
     }
 
     /**
-     * @Route("/{id}", name="place_type_delete", methods="DELETE")
+     * @Route("/{id}", name="place_type_delete", methods={"DELETE"})
      */
     public function delete(Request $request, PlaceType $placeType): Response
     {

@@ -4,17 +4,22 @@
 import jwtDecode from 'jwt-decode';
 
 /**
- * Code
+ * Decode the JWT stored in localStorage, or false if missing/expired/invalid.
  */
-// Decode the token in the localStorage
 export const parseJwt = () => {
   const tokenFromStorage = localStorage.getItem('token');
   if (!tokenFromStorage) {
     return false;
   }
   try {
-    return jwtDecode(tokenFromStorage);
+    const payload = jwtDecode(tokenFromStorage);
+    if (payload.exp && payload.exp * 1000 < Date.now()) {
+      localStorage.removeItem('token');
+      return false;
+    }
+    return payload;
   } catch (error) {
+    localStorage.removeItem('token');
     return false;
   }
 };

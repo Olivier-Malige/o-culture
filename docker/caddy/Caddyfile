@@ -5,6 +5,17 @@
 {$SITE_ADDRESS} {
 	encode gzip
 
+	header {
+		X-Content-Type-Options nosniff
+		X-Frame-Options DENY
+		Referrer-Policy strict-origin-when-cross-origin
+		Permissions-Policy "camera=(), microphone=(), geolocation=()"
+		-Server
+	}
+
+	@https protocol https
+	header @https Strict-Transport-Security "max-age=31536000; includeSubDomains"
+
 	handle /api* {
 		reverse_proxy api:80 {
 			header_up Authorization {http.request.header.Authorization}

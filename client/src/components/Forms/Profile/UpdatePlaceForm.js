@@ -2,7 +2,7 @@
  * Import
  */
 // uuidv4 is used for generate unique key
-import uuidv4 from 'uuid/v4';
+import { v4 as uuidv4 } from 'uuid';
 
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';

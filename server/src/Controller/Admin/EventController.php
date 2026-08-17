@@ -10,15 +10,15 @@ use App\Repository\EventRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use App\Controller\BaseController;
 
 /**
  * @Route("/admin/event")
  */
-class EventController extends Controller
+class EventController extends BaseController
 {
     /**
-     * @Route("/", name="event_index_all", methods="GET")
+     * @Route("/", name="event_index_all", methods={"GET"})
      */
     public function index(EventRepository $eventRepository): Response
     {
@@ -26,7 +26,7 @@ class EventController extends Controller
     }
 
     /**
-     * @Route("/page/{page}", name="event_index", methods="GET")
+     * @Route("/page/{page}", name="event_index", methods={"GET"})
      * @param integer $page
      */
     public function indexAdmin($page)
@@ -43,7 +43,7 @@ class EventController extends Controller
     }
 
     /**
-     * @Route("/new", name="event_new", methods="GET|POST")
+     * @Route("/new", name="event_new", methods={"GET","POST"})
      */
     public function new(Request $request): Response
     {
@@ -79,7 +79,7 @@ class EventController extends Controller
     }
 
     /**
-     * @Route("/{id}", name="event_show", methods="GET")
+     * @Route("/{id}", name="event_show", methods={"GET"})
      */
     public function show(Event $event): Response
     {
@@ -88,7 +88,7 @@ class EventController extends Controller
     }
 
     /**
-     * @Route("/{id}/edit", name="event_edit", methods="GET|POST")
+     * @Route("/{id}/edit", name="event_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, Event $event): Response
     {
@@ -111,7 +111,7 @@ class EventController extends Controller
     }
 
     /**
-     * @Route("/{id}", name="event_delete", methods="DELETE")
+     * @Route("/{id}", name="event_delete", methods={"DELETE"})
      */
     public function delete(Request $request, Event $event): Response
     {

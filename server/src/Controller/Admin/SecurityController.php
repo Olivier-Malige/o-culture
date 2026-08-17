@@ -2,14 +2,14 @@
 
 namespace App\Controller\Admin;
 use Symfony\Component\HttpFoundation\Request;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use App\Controller\BaseController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 
 
-class SecurityController extends Controller
+class SecurityController extends BaseController
 {
 
     /**

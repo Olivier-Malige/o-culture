@@ -5,7 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Message;
 use App\Form\MessageType;
 use App\Repository\MessageRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use App\Controller\BaseController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -13,10 +13,10 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/chat/messages")
  */
-class MessageController extends Controller
+class MessageController extends BaseController
 {
     /**
-     * @Route("/", name="message_index", methods="GET")
+     * @Route("/", name="message_index", methods={"GET"})
      */
     public function index(MessageRepository $messageRepository): Response
     {
@@ -29,7 +29,7 @@ class MessageController extends Controller
     }
 
     /**
-     * @Route("/new", name="message_new", methods="GET|POST")
+     * @Route("/new", name="message_new", methods={"GET","POST"})
      */
     public function new(Request $request): Response
     {
@@ -54,7 +54,7 @@ class MessageController extends Controller
     }
 
     /**
-     * @Route("/{id}", name="message_show", methods="GET")
+     * @Route("/{id}", name="message_show", methods={"GET"})
      */
     public function show(Message $message): Response
     {
@@ -71,7 +71,7 @@ class MessageController extends Controller
     }
 
     // /**
-    //  * @Route("/{id}/edit", name="message_edit", methods="GET|POST")
+    //  * @Route("/{id}/edit", name="message_edit", methods={"GET","POST"})
     //  */
     // public function edit(Request $request, Message $message): Response
     // {
@@ -91,7 +91,7 @@ class MessageController extends Controller
     // }
 
     // /**
-    //  * @Route("/{id}", name="message_delete", methods="DELETE")
+    //  * @Route("/{id}", name="message_delete", methods={"DELETE"})
     //  */
     // public function delete(Request $request, Message $message): Response
     // {

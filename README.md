@@ -1,11 +1,11 @@
 # O'Culture
 
 Application de formation (O'Clock, 2018) : événements culturels, artistes et
-lieux. Stack figée volontairement — **PHP 7.4 / Symfony 4.2 / React 16** — pour
-pouvoir la relancer telle quelle.
+lieux. Stack mise à jour pour un hébergement Docker : **PHP 8.3 / Symfony 6.4 /
+React 16**.
 
-Ce n’est **pas** un produit officiel O'Clock. Les dépendances sont en fin de
-vie : utilisez Docker, ne l’exposez pas comme un service critique.
+Ce n’est **pas** un produit officiel O'Clock. Générez des secrets uniques avant
+toute exposition sur Internet.
 
 Licence : [MIT](LICENSE).
 
@@ -53,7 +53,7 @@ cp .env.prod.example .env.prod
 
 Renseignez au minimum `DOMAIN`, `ACME_EMAIL`, `APP_SECRET`, `JWT_PASSPHRASE`
 et les mots de passe MariaDB. Adaptez `TRUSTED_HOSTS` et `CORS_ALLOW_ORIGIN`
-au domaine.
+au domaine. Changez `DEMO_PASSWORD`.
 
 4. Lancez :
 
@@ -67,12 +67,12 @@ premier démarrage (volume Docker, hors git).
 ## Architecture
 
 - `web` : Caddy (SPA + reverse-proxy `/api`, `/admin`, `/chat`)
-- `api` : Apache + PHP 7.4 (Symfony)
+- `api` : Apache + PHP 8.3 (Symfony 6.4)
 - `db` : MariaDB 10.11 + seed anonymisé
 
 ## Développement hors Docker
 
-Possible mais déconseillé (PHP 7.4 et Node 10–14). Les fichiers
-`server/.env.dist` et `client/package.json` documentent l’ancienne procédure
-(`composer install`, `yarn start`). L’URL d’API se configure avec `API_URL`
-au build Webpack (vide = same-origin).
+Possible mais déconseillé. Les fichiers `server/.env.dist` et
+`client/package.json` documentent l’ancienne procédure (`composer install`,
+`yarn start`). L’URL d’API se configure avec `API_URL` au build Webpack
+(vide = same-origin).

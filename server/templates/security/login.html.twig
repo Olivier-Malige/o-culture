@@ -15,6 +15,7 @@
                 <label for="password">Mot de passe :</label>
                 <input class="form-control" type="password" id="password" name="_password"/>
             </div>
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
             <button class="btn btn-success form-button mt-3" type="submit">Se connecter</button>
         </form>
     </div>
