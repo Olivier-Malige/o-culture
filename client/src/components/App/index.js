@@ -48,6 +48,11 @@ class App extends React.Component {
   render() {
     return (
       <div>
+        <p className="demo-banner" role="status">
+          Démo · O&apos;Clock 2018
+          <br />
+          promo Invaders
+        </p>
         <HeadBar />
         <main>
           <Switch>
