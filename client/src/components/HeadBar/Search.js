@@ -5,29 +5,47 @@ import Suggestions from './Suggestions';
 class Search extends React.Component {
   handleChange = (evt) => {
     const { onInputChange } = this.props;
-    const { value } = evt.target;
-    onInputChange(value);
+    onInputChange(evt.target.value);
+  }
+
+  handleSubmit = (evt) => {
+    const { submit } = this.props;
+    evt.preventDefault();
+    if (evt.target && evt.target.querySelector) {
+      const input = evt.target.querySelector('input');
+      if (input) {
+        input.blur();
+      }
+    }
+    if (submit) {
+      submit();
+    }
   }
 
   render() {
-    const { query, results, submit } = this.props;
-    return (
+    const { query, results } = this.props;
+    const showResults = query && query.trim().length >= 2;
 
+    return (
       <div className="search-bar">
         <form
           className="search-bar--form"
-          onSubmit={submit}
+          onSubmit={this.handleSubmit}
         >
           <div className="search-bar--form--icon_search" />
           <input
             value={query}
             onChange={this.handleChange}
             className="search-bar--form--input"
+            placeholder="Rechercher un événement, un artiste, un lieu"
+            autoComplete="off"
           />
         </form>
-        <div className="search-bar--results">
-          <Suggestions results={results} />
-        </div>
+        {showResults && (
+          <div className="search-bar--results">
+            <Suggestions results={results} />
+          </div>
+        )}
       </div>
     );
   }

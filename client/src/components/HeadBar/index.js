@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { Link, Redirect, withRouter } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 /**
@@ -20,9 +20,6 @@ import './headBar.sass';
  * Code
  */
 class HeadBar extends React.Component {
-  // Create reference for cleaning input on submit form
-  refInput = React.createRef();
-
   static propTypes = {
     signupShow: PropTypes.bool.isRequired,
     loginShow: PropTypes.bool.isRequired,
@@ -34,26 +31,14 @@ class HeadBar extends React.Component {
     userInitial: PropTypes.string.isRequired,
   };
 
-  // temporary
-  state = {
-    showResults: false,
-  }
-
   handleSubmit = (evt) => {
-    evt.preventDefault();
-    const input = this.refInput.current;
-    input.value = '';
-
-    // temporary
-    this.setState(
-      {
-        showResults: true,
-      },
-    );
+    if (evt) {
+      evt.preventDefault();
+    }
+    this.props.history.push('/search');
   }
 
   render() {
-    const { showResults } = this.state;
     const {
       signupShow,
       setSignup,
@@ -66,9 +51,6 @@ class HeadBar extends React.Component {
     } = this.props;
     return (
       <header>
-        {showResults && (
-          <Redirect to="/search" />
-        )}
         {(signupShow === true || loginShow === true) && (
           <Connection />
         )}

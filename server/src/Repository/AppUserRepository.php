@@ -54,11 +54,12 @@ class AppUserRepository extends ServiceEntityRepository
         $entityManager = $this->getEntityManager();
 
         $query = $entityManager->createQuery(
-            "SELECT a.id, a.name
+            "SELECT a.id, a.name, a.username
             FROM App\Entity\AppUser a
             WHERE a.status = 2
-            AND a.name LIKE :data"
-        )->setParameter('data', '%'.$searchData.'%');
+            AND (a.name LIKE :data OR a.username LIKE :data)"
+        )->setParameter('data', '%'.$searchData.'%')
+            ->setMaxResults(8);
 
         return $query->execute();
     }

@@ -27,8 +27,9 @@ class PlaceRepository extends ServiceEntityRepository
         $query = $entityManager->createQuery(
             "SELECT p.id, p.name
             FROM App\Entity\Place p
-            WHERE p.name LIKE :data"
-        )->setParameter('data', '%'.$searchData.'%');
+            WHERE p.name LIKE :data OR p.city LIKE :data"
+        )->setParameter('data', '%'.$searchData.'%')
+            ->setMaxResults(8);
 
         return $query->execute();
     }

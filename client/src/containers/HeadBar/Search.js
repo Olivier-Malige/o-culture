@@ -8,10 +8,10 @@ import { connect } from 'react-redux';
  */
 import Search from 'src/components/HeadBar/Search';
 import { getResultsEvents, getResultsArtists, getResultsPlaces } from 'src/store/middlewares/dataAjax';
+import { searchInput, resultsEventsReceived, resultsArtistsReceived, resultsPlacesReceived } from 'src/store/reducers/data';
 
-import { searchInput } from 'src/store/reducers/data';
+let searchTimer;
 
-// Action Creators
 const mapStateToProps = state => ({
   query: state.data.search.query,
   results: state.data.search.results,
@@ -20,22 +20,25 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   onInputChange: (value) => {
     dispatch(searchInput(value));
-    // if (value && value.length > 1) {
-    if (value) {
-      dispatch(getResultsEvents(value));
-      dispatch(getResultsArtists(value));
-      dispatch(getResultsPlaces(value));
+    window.clearTimeout(searchTimer);
+    const query = value.trim();
+    if (query.length < 2) {
+      dispatch(resultsEventsReceived([]));
+      dispatch(resultsArtistsReceived([]));
+      dispatch(resultsPlacesReceived([]));
+      return;
     }
+    searchTimer = window.setTimeout(() => {
+      dispatch(getResultsEvents(query));
+      dispatch(getResultsArtists(query));
+      dispatch(getResultsPlaces(query));
+    }, 300);
   },
 });
 
-// Container
 const SearchContainer = connect(
   mapStateToProps,
   mapDispatchToProps,
 )(Search);
 
-/**
- * Export
- */
 export default SearchContainer;

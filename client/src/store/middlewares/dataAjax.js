@@ -48,6 +48,17 @@ const GET_EVENTS_BY_TYPE = 'GET_EVENTS_BY_TYPE';
  * Code
  */
 const server = new Server();
+
+/**
+ * Keep only array payloads that still match the current search query.
+ */
+const dispatchSearchList = (store, query, data, actionCreator) => {
+  if (query !== store.getState().data.search.query.trim()) {
+    return;
+  }
+  store.dispatch(actionCreator(Array.isArray(data) ? data : []));
+};
+
 const dataAjax = store => next => (action) => {
   switch (action.type) {
     case GET_ARTISTS_LIST:
@@ -168,7 +179,7 @@ const dataAjax = store => next => (action) => {
         })
         .then((response) => {
           // console.log(response.data);
-          store.dispatch(resultsEventsReceived(response.data));
+          dispatchSearchList(store, action.value, response.data, resultsEventsReceived);
         })
         .catch((error) => {
           console.error(error);
@@ -181,7 +192,7 @@ const dataAjax = store => next => (action) => {
         })
         .then((response) => {
           // console.log(response.data);
-          store.dispatch(resultsArtistsReceived(response.data));
+          dispatchSearchList(store, action.value, response.data, resultsArtistsReceived);
         })
         .catch((error) => {
           console.error(error);
@@ -194,7 +205,7 @@ const dataAjax = store => next => (action) => {
         })
         .then((response) => {
           // console.log(response.data);
-          store.dispatch(resultsPlacesReceived(response.data));
+          dispatchSearchList(store, action.value, response.data, resultsPlacesReceived);
         })
         .catch((error) => {
           console.error(error);

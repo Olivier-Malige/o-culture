@@ -26,7 +26,7 @@ class SearchController extends BaseController
     {
         $serializer = $this->container->get('jms_serializer');
         $eventRepository = $this->getDoctrine()->getRepository(Event::class);
-        $events = $eventRepository->findByName(trim(htmlspecialchars($request->get('search'))));              
+        $events = $eventRepository->findByName(trim(htmlspecialchars((string) $request->get('search', ''))));              
                 
         if(empty($events)) {
             
@@ -76,7 +76,7 @@ class SearchController extends BaseController
     {
         $serializer = $this->container->get('jms_serializer');
         $appUserRepository = $this->getDoctrine()->getRepository(AppUser::class);
-        $artists = $appUserRepository->findByName(trim(htmlspecialchars($request->get('search'))));              
+        $artists = $appUserRepository->findByName(trim(htmlspecialchars((string) $request->get('search', ''))));              
                 
         if(empty($artists)) {
             
@@ -127,7 +127,7 @@ class SearchController extends BaseController
     {
         $serializer = $this->container->get('jms_serializer');
         $placeRepository = $this->getDoctrine()->getRepository(Place::class);
-        $places = $placeRepository->findByName(trim(htmlspecialchars($request->get('search'))));              
+        $places = $placeRepository->findByName(trim(htmlspecialchars((string) $request->get('search', ''))));              
                 
         if(empty($places)) {
             

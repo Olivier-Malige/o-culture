@@ -83,8 +83,10 @@ class EventRepository extends ServiceEntityRepository
         $query = $entityManager->createQuery(
             "SELECT e
             FROM App\Entity\Event e
-            WHERE e.name LIKE :data"
-        )->setParameter('data', '%'.$searchData.'%');
+            LEFT JOIN e.eventPlace p
+            WHERE e.name LIKE :data OR p.name LIKE :data OR p.city LIKE :data"
+        )->setParameter('data', '%'.$searchData.'%')
+            ->setMaxResults(8);
 
         return $query->execute();
     }
