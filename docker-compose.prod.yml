@@ -13,16 +13,8 @@ services:
   web:
     restart: unless-stopped
     ports: !override
-      - "80:80"
-      - "443:443"
-      - "443:443/udp"
+      - "127.0.0.1:${WEB_HOST_PORT:-8080}:80"
     environment:
-      SITE_ADDRESS: ${DOMAIN}
-      ACME_EMAIL: ${ACME_EMAIL}
+      SITE_ADDRESS: ":80"
     volumes:
-      - caddy_data:/data
-      - caddy_config:/config
-
-volumes:
-  caddy_data:
-  caddy_config:
+      - ./docker/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
