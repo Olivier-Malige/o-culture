@@ -69,6 +69,28 @@ docker compose -f docker-compose.yml -f docker-compose.prod.yml --env-file .env.
 Caddy obtient un certificat Let's Encrypt. Les clés JWT sont générées au
 premier démarrage (volume Docker, hors git).
 
+### Renouvellement des événements de démonstration
+
+Après avoir déployé cette version, lancez une première fois la commande pour
+remplir la démo avec 30 événements à venir :
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.prod.yml --env-file .env.prod exec -T api \
+  php bin/console app:demo:refresh-events --env=prod --no-debug
+```
+
+La commande complète ensuite le calendrier jusqu’à 30 événements actifs à
+venir. Elle n’efface ni ne modifie les événements existants. Pour la lancer
+automatiquement le premier jour de chaque mois à 03:15, ajoutez cette ligne au
+crontab de l’utilisateur qui peut exécuter Docker (`crontab -e`) :
+
+```cron
+15 3 1 * * /home/ubuntu/o-culture/docker/refresh-demo-events.sh >> /home/ubuntu/o-culture/demo-events.log 2>&1
+```
+
+Adaptez `/home/ubuntu/o-culture` si le dépôt se trouve ailleurs. Le script
+utilise `.env.prod` et exécute la commande dans le conteneur API déjà lancé.
+
 ## Architecture
 
 - `web` : Caddy (SPA + reverse-proxy `/api`, `/admin`, `/chat`)
