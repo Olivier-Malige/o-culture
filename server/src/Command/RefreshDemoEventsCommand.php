@@ -17,7 +17,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
     name: 'app:demo:refresh-events',
-    description: 'Complète les événements de démonstration à venir.'
+    description: 'Supprime les événements passés et complète le calendrier à venir.'
 )]
 class RefreshDemoEventsCommand extends Command
 {
@@ -94,27 +94,31 @@ class RefreshDemoEventsCommand extends Command
 
         $missing = max(0, $target - $upcomingCount);
 
-        if ($missing === 0) {
-            $io->success(sprintf('%d événements actifs sont déjà à venir. Aucun ajout nécessaire.', $upcomingCount));
+        if ($missing > 0) {
+            $creator = $this->entityManager->getRepository(AppUser::class)
+                ->createQueryBuilder('user')
+                ->join('user.role', 'userRole')
+                ->where('userRole.code = :role')
+                ->setParameter('role', 'ROLE_ORGANIZER')
+                ->setMaxResults(1)
+                ->getQuery()
+                ->getOneOrNullResult();
+            $places = $this->entityManager->getRepository(Place::class)->findBy(['isActive' => true]);
+            $eventTypes = $this->entityManager->getRepository(EventType::class)->findBy(['isActive' => true]);
 
-            return Command::SUCCESS;
+            if (!$creator || !$places || !$eventTypes) {
+                $io->error('Impossible de créer les événements : il faut au moins un compte organisateur, un lieu actif et un type actif.');
+
+                return Command::FAILURE;
+            }
         }
 
-        $creator = $this->entityManager->getRepository(AppUser::class)
-            ->createQueryBuilder('user')
-            ->join('user.role', 'userRole')
-            ->where('userRole.code = :role')
-            ->setParameter('role', 'ROLE_ORGANIZER')
-            ->setMaxResults(1)
-            ->getQuery()
-            ->getOneOrNullResult();
-        $places = $this->entityManager->getRepository(Place::class)->findBy(['isActive' => true]);
-        $eventTypes = $this->entityManager->getRepository(EventType::class)->findBy(['isActive' => true]);
+        $expiredCount = $this->removeExpiredEvents($now);
 
-        if (!$creator || !$places || !$eventTypes) {
-            $io->error('Impossible de créer les événements : il faut au moins un compte organisateur, un lieu actif et un type actif.');
+        if ($missing === 0) {
+            $io->success(sprintf('%d événements expirés supprimés. Les %d événements à venir sont conservés.', $expiredCount, $upcomingCount));
 
-            return Command::FAILURE;
+            return Command::SUCCESS;
         }
 
         for ($index = 0; $index < $missing; ++$index) {
@@ -134,7 +138,7 @@ class RefreshDemoEventsCommand extends Command
 
         $this->entityManager->flush();
 
-        $io->success(sprintf('%d événements de démonstration ont été ajoutés. Il y en a maintenant au moins %d à venir.', $missing, $target));
+        $io->success(sprintf('%d événements expirés supprimés, %d événements ajoutés. Il y en a maintenant au moins %d à venir.', $expiredCount, $missing, $target));
 
         return Command::SUCCESS;
     }
@@ -145,5 +149,25 @@ class RefreshDemoEventsCommand extends Command
         $hour = random_int(10, 21);
 
         return $now->modify(sprintf('+%d days', $daysAhead))->setTime($hour, random_int(0, 1) * 30);
+    }
+
+    private function removeExpiredEvents(DateTimeImmutable $now): int
+    {
+        $expiredEvents = $this->entityManager->getRepository(Event::class)
+            ->createQueryBuilder('event')
+            ->where('event.plannedDate < :now')
+            ->setParameter('now', $now)
+            ->getQuery()
+            ->getResult();
+
+        foreach ($expiredEvents as $event) {
+            $this->entityManager->remove($event);
+        }
+
+        if ($expiredEvents) {
+            $this->entityManager->flush();
+        }
+
+        return count($expiredEvents);
     }
 }

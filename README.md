@@ -79,10 +79,11 @@ docker compose -f docker-compose.yml -f docker-compose.prod.yml --env-file .env.
   php bin/console app:demo:refresh-events --env=prod --no-debug
 ```
 
-La commande complète ensuite le calendrier jusqu’à 30 événements actifs à
-venir. Elle n’efface ni ne modifie les événements existants. Pour la lancer
-automatiquement le premier jour de chaque mois à 03:15, ajoutez cette ligne au
-crontab de l’utilisateur qui peut exécuter Docker (`crontab -e`) :
+La commande supprime les événements dont la date est passée, puis complète le
+calendrier jusqu’à 30 événements actifs à venir. Les commentaires associés aux
+événements supprimés le sont aussi; les événements futurs restent intacts.
+Pour la lancer automatiquement le premier jour de chaque mois à 03:15, ajoutez
+cette ligne au crontab de l’utilisateur qui peut exécuter Docker (`crontab -e`) :
 
 ```cron
 15 3 1 * * /home/ubuntu/o-culture/docker/refresh-demo-events.sh >> /home/ubuntu/o-culture/demo-events.log 2>&1
